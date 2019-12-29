@@ -4,6 +4,7 @@ import pygame
 from math import sin, radians, degrees, copysign
 from pygame.math import Vector2
 
+import path_generator
 
 class Car:
     def __init__(self, x, y, angle=0.0, length=4, max_steering=30, max_acceleration=5.0):
@@ -79,6 +80,7 @@ class Game:
         self.screen.fill((0, 0, 0))
         rotated = pygame.transform.rotate(car_image, self.car.angle)
         rect = rotated.get_rect()
+        pygame.draw.polygon(self.screen, (0, 255, 0), path_generator.generate_polygon())
         self.screen.blit(rotated, self.car.position * ppu - (rect.width / 2, rect.height / 2))
         pygame.display.flip()
 
