@@ -32,7 +32,7 @@ class Car:
 
 
 class Game:
-    def __init__(self, path):
+    def __init__(self, path, closed_polygon):
         pygame.init()
         pygame.display.set_caption("Trained car")
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -42,6 +42,7 @@ class Game:
         self.car = Car(100, 100)
 
         self.path = path
+        self.closed_polygon = closed_polygon
 
     def run(self):
         car = Car(0, 0)
@@ -70,13 +71,15 @@ class Game:
         car_image = pygame.image.load(image_path)
 
         self.screen.fill((0, 0, 0))
-        rotated = pygame.transform.rotate(car_image, self.car.angle)
-        pygame.draw.lines(self.screen, (0, 255, 0), True, self.path)
-        self.screen.blit(rotated, self.car.position)
+        rotated_car = pygame.transform.rotate(car_image, self.car.angle)
+        pygame.draw.lines(self.screen, (0, 255, 0), self.closed_polygon, self.path)
+        self.screen.blit(rotated_car, self.car.position)
         pygame.display.flip()
 
 if __name__ == '__main__':
-    path = path_generator.generate_polygon()
-    game = Game(path)
+    # path = path_generator.generate_polygon()
+    path = path_generator.generate_sin_path()
+    
+    game = Game(path, False)
     
     game.run()

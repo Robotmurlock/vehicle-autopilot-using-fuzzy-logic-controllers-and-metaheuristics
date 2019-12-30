@@ -1,12 +1,12 @@
-import math
 import random
 
 import game
+import math
+
 from gift_wrap_ch import gift_wrap
 
 
-
-def generate_polygon(): 
+def generate_convex_polygon(): 
     coords = []
     num_of_points = 20
 
@@ -17,9 +17,16 @@ def generate_polygon():
 
     polygon = gift_wrap(coords)
     
-    print(polygon)
-
     return polygon
+
+
+def generate_sin_path():
+    coords = []
+    num_of_points = 20
+    for i in range(game.SCREEN_WIDTH):
+        coords.append((i, math.sin(0.01*i) * 300 + 400))
+
+    return coords
 
 def main():
     pass
