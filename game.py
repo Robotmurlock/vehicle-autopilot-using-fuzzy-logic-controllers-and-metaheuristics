@@ -38,7 +38,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
-        self.car = Car(10, 10)
+        self.car = Car(100, 100)
 
         self.path = path
 
@@ -68,13 +68,11 @@ class Game:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         image_path = os.path.join(current_dir, IMAGE_DIR, IMAGE_NAME)
         car_image = pygame.image.load(image_path)
-        ppu = 32
 
         self.screen.fill((0, 0, 0))
         rotated = pygame.transform.rotate(car_image, self.car.angle)
-        rect = rotated.get_rect()
         pygame.draw.lines(self.screen, (0, 255, 0), True, self.path)
-        self.screen.blit(rotated, self.car.position * ppu - (rect.width / 2, rect.height / 2))
+        self.screen.blit(rotated, self.car.position)
         pygame.display.flip()
 
 if __name__ == '__main__':

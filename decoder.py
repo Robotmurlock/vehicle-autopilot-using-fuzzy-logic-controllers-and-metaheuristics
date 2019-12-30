@@ -1,9 +1,9 @@
 import random
 
 def get_movement_params():
-    dx = random.uniform(-1, 1)
-    dy = random.uniform(-1, 1)
-    drot = random.uniform(1, 10)
+    dx = random.uniform(-10, 10)
+    dy = random.uniform(-10, 10)
+    drot = random.uniform(-10, 10)
 
     return (dx, dy, drot)
 
