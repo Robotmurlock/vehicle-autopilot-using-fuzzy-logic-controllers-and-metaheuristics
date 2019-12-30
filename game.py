@@ -28,6 +28,10 @@ class Car:
         angular_velocity = self.velocity.x / turning_radius
 
         self.position += self.velocity.rotate(-self.angle) * dt
+        self.position.x = max(self.position.x, 0)
+        self.position.y = max(self.position.y, 0)
+        self.position.x = min(self.position.x, SCREEN_WIDTH/32)
+        self.position.y = min(self.position.y, SCREEN_HEIGHT/32)
         self.angle += degrees(drot) * dt
 
 
@@ -69,9 +73,10 @@ class Game:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         image_path = os.path.join(current_dir, IMAGE_DIR, IMAGE_NAME)
         car_image = pygame.image.load(image_path)
+        scaled = pygame.transform.scale(car_image, (40, 20))
 
         self.screen.fill((0, 0, 0))
-        rotated_car = pygame.transform.rotate(car_image, self.car.angle)
+        rotated_car = pygame.transform.rotate(scaled, self.car.angle)
         pygame.draw.lines(self.screen, (0, 255, 0), self.closed_polygon, self.path)
         self.screen.blit(rotated_car, self.car.position)
         pygame.display.flip()
