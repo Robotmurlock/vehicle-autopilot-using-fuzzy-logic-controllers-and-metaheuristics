@@ -6,6 +6,9 @@ from pygame.math import Vector2
 
 import path_generator
 
+screen_width = 1280
+screen_height = 720
+
 class Car:
     def __init__(self, x, y, angle=0.0, length=4, max_steering=30, max_acceleration=5.0):
         self.position = Vector2(x, y)
@@ -32,6 +35,10 @@ class Car:
             angular_velocity = 0
 
         self.position += self.velocity.rotate(-self.angle) * dt
+        self.position.x = max(self.position.x, 0)
+        self.position.x = min(self.position.x, 40)
+        self.position.y = max(self.position.y, 0)
+        self.position.y = min(self.position.y, 22.5)
         self.angle += degrees(angular_velocity) * dt
 
 
@@ -39,16 +46,14 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Car tutorial")
-        width = 1280
-        height = 720
-        self.screen = pygame.display.set_mode((width, height))
+        self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
         self.car = Car(0, 0)
 
     def run(self):
-        car = Car(0, 0)
+        car = Car(10, 10)
 
         while not self.exit:
             dt = self.clock.get_time() / 1000
@@ -78,7 +83,8 @@ class Game:
         ppu = 32
 
         self.screen.fill((0, 0, 0))
-        rotated = pygame.transform.rotate(car_image, self.car.angle)
+        scaled = pygame.transform.scale(car_image, (20, 10))
+        rotated = pygame.transform.rotate(scaled, self.car.angle)
         rect = rotated.get_rect()
         pygame.draw.polygon(self.screen, (0, 255, 0), path_generator.generate_polygon())
         self.screen.blit(rotated, self.car.position * ppu - (rect.width / 2, rect.height / 2))
