@@ -1,9 +1,21 @@
 import math
+import random
 
 def generate_polygon():
+    xs = []
+    ys = []
     
+    width = 1280
+    height = 720
+
+    for i in range (10):
+        xs.append(random.randrange(1280))
+        ys.append(random.randrange(720))
+
+    polygon = list(zip(xs, ys))
     
-    polygon = [(100, 100), (200, 200), (300, 300)]
+
+    print(polygon)
 
     return polygon
 
