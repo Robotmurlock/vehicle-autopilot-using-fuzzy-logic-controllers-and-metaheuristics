@@ -1,3 +1,25 @@
+# MFInput: Represents fuzzy membership function for input variable. 
+#          Main role is to calculate belonging of element x to appropriate set. 
+#
+# MFOutput: Represents fuzzy membership function for output variable. 
+#           Main role is to calculate belonging of element x to appropriate set 
+#           based on declared rules (class Rule) and input variables. 
+#
+# Rule: Represents one rule for fuzzy system.
+#
+# FuzzyInput: Represents set of input variables (MFInput). 
+#
+# FuzzyOutput: Represents set of output variables (MFOutput).
+#
+# FuzzySystem: Represents Fuzzy system that contains set of inputs (FuzzyInput), 
+#              one output (FuzzyOutput) and set of Rules (Rule). How it works (self.fit(X)):
+#
+# Process: 
+# 1. For every F(i) in FuzzyInput: Calculate membership of element X(i) for every M(j) (MFInput) in F(i);
+# 2. Apply rules. This calculates membership value for every MFOutput in FuzzyOutput;
+# 3. Calculate final output value as centroid of all MFOutput values.
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -20,6 +42,7 @@ class MFInput:
         self.mi = self.getMi()
         
     def getY(self, x1, y1, x2, y2):
+        # Calculates y value using triangle similarity theorem
         if y1 == y2:
             return y1
         if y1 < y2:
@@ -65,6 +88,7 @@ class MFOutput:
         self.points = np.array(list(zip(xs, ys)))
         self.size = xs.size
         
+        # Calculates center position (used for centroid method)
         self.center = None
         sum1 = 0
         cnt1 = 0
@@ -78,7 +102,7 @@ class MFOutput:
     def show_diagram(self, solution):
         xs = [p[0] for p in self.points]
         ys = [p[1] for p in self.points]
-        
+
         plt.ylim(-0.1, 1.4)
         plt.xlabel('output')
         plt.ylabel(self.name + ' value')
@@ -94,6 +118,7 @@ class Rule:
         self.operator = operator
     
     def apply_rule(self):
+        # Updates output variable based on given operator
         n = self.inputs.size
         if self.operator == Logic.OR:
             mi = 0
@@ -129,7 +154,7 @@ class FuzzyInput:
     def show_diagram(self):
         for i in range(0, self.size):
             self.inputs[i].show_diagram()
-        plt.ylabel(self.name)
+        plt.ylabel(self.name)   
         plt.show()
 
 class FuzzyOutput:
@@ -147,6 +172,7 @@ class FuzzyOutput:
     def show_diagram(self, solution):
         for i in range(0, self.size):
             self.outputs[i].show_diagram(solution)
+
         plt.ylabel(self.name)
         plt.show()
 
@@ -173,14 +199,17 @@ class FuzzySystem:
         self.solution = None
         
     def fit(self, x0s):
+        # Calculate input membership values
         for i in range(0, self.inputs.size):
             x0 = x0s[i]
             for j in range(0, self.inputs[i].size):
                 self.inputs[i][j].setMi(x0)
             
+        # Apply rules
         for i in range(0, self.rules.size):
             self.rules[i].apply_rule()
             
+        # Calculate output membership value (centroid method)
         numerator = 0
         denominator = 0 
         for mfo in self.output:
