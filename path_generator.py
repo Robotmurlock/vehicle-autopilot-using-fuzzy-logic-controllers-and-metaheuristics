@@ -1,20 +1,22 @@
 import math
 import random
 
-def generate_polygon():
-    xs = []
-    ys = []
+import game
+from gift_wrap_ch import gift_wrap
+
+
+
+def generate_polygon(): 
+    coords = []
+    num_of_points = 20
+
+    for i in range (num_of_points):
+        x = random.randrange(game.SCREEN_WIDTH)
+        y = random.randrange(game.SCREEN_HEIGHT)
+        coords.append((x, y))
+
+    polygon = gift_wrap(coords)
     
-    width = 1280
-    height = 720
-
-    for i in range (10):
-        xs.append(random.randrange(1280))
-        ys.append(random.randrange(720))
-
-    polygon = list(zip(xs, ys))
-    
-
     print(polygon)
 
     return polygon

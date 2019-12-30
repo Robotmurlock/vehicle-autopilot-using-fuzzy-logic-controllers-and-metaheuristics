@@ -11,6 +11,9 @@ import decoder
 IMAGE_DIR = "img"
 IMAGE_NAME = "car.png"
 
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
+
 class Car:
     def __init__(self, x, y, angle=0.0, length=4):
         self.position = Vector2(x, y)
@@ -32,9 +35,7 @@ class Game:
     def __init__(self, path):
         pygame.init()
         pygame.display.set_caption("Trained car")
-        width = 1280
-        height = 720
-        self.screen = pygame.display.set_mode((width, height))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
@@ -57,7 +58,6 @@ class Game:
             self.car.update(dt, dx, dy, drot)
 
             print("Car position", self.car.position)
-            # Drawing
             self.draw_screen()
 
             self.clock.tick(self.ticks)
