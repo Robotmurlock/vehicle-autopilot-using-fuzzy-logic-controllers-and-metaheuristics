@@ -76,15 +76,25 @@ class Game:
         scaled = pygame.transform.scale(car_image, (40, 20))
 
         self.screen.fill((0, 0, 0))
+        
         rotated_car = pygame.transform.rotate(scaled, self.car.angle)
-        pygame.draw.lines(self.screen, (0, 255, 0), self.closed_polygon, self.path)
+
+        self.draw_path()
+
         self.screen.blit(rotated_car, self.car.position)
         pygame.display.flip()
 
+    def draw_path(self):
+        color = (0, 255, 0)
+
+        for coords in self.path:
+            pygame.draw.lines(self.screen, color, self.closed_polygon, coords)
+
+
 if __name__ == '__main__':
-    # path = path_generator.generate_polygon()
-    path = path_generator.generate_sin_path()
+    path, is_closed = path_generator.generate_convex_polygon()
+    # path, is_closed = path_generator.generate_sin_path()
     
-    game = Game(path, False)
+    game = Game(path, is_closed)
     
     game.run()
