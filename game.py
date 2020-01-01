@@ -43,7 +43,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
-        self.car = Car(100, 100)
+        self.car = Car(0, 0)
 
         self.path = path
         self.closed_polygon = closed_polygon
@@ -54,7 +54,6 @@ class Game:
         while not self.exit:
             dt = self.clock.get_time() / 1000
 
-            # Event queue
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.exit = True

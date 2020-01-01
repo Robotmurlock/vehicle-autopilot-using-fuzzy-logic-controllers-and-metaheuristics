@@ -7,8 +7,6 @@ import math
 import utils.convex_hull as ch 
 import utils.linear_transformations as lt
 
-
-
 def generate_convex_polygon(): 
     coords = []
     num_of_points = 20
