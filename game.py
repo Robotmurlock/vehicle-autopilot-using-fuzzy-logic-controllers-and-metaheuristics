@@ -4,6 +4,7 @@ import pygame
 import random
 from math import sin, radians, degrees, copysign
 from pygame.math import Vector2
+import time
 
 import path_generator
 import decoder
@@ -13,6 +14,9 @@ IMAGE_NAME = "car.png"
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+
+CAR_WIDTH = 40
+CAR_HEIGHT = 20
 
 class Car:
     def __init__(self, x, y, angle=0.0, length=4):
@@ -30,8 +34,8 @@ class Car:
         self.position += self.velocity.rotate(-self.angle) * dt
         self.position.x = max(self.position.x, 0)
         self.position.y = max(self.position.y, 0)
-        self.position.x = min(self.position.x, SCREEN_WIDTH/32)
-        self.position.y = min(self.position.y, SCREEN_HEIGHT/32)
+        self.position.x = min(self.position.x, SCREEN_WIDTH - CAR_WIDTH)
+        self.position.y = min(self.position.y, SCREEN_HEIGHT - CAR_HEIGHT)
         self.angle += degrees(drot) * dt
 
 
@@ -43,25 +47,26 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
-        self.car = Car(0, 0)
+        self.car = Car(100, 100)
 
         self.path = path
         self.closed_polygon = closed_polygon
 
     def run(self):
-        car = Car(0, 0)
+        car = Car(100, 100)
 
         while not self.exit:
+            #time.sleep(0.5)
             dt = self.clock.get_time() / 1000
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.exit = True
 
-            dx, dy, drot = decoder.get_movement_params()
+            dx, dy, drot = decoder.get_movement_params(car)
             self.car.update(dt, dx, dy, drot)
 
-            print("Car position", self.car.position)
+            #print("Car position", self.car.position)
             self.draw_screen()
 
             self.clock.tick(self.ticks)
@@ -72,7 +77,7 @@ class Game:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         image_path = os.path.join(current_dir, IMAGE_DIR, IMAGE_NAME)
         car_image = pygame.image.load(image_path)
-        scaled = pygame.transform.scale(car_image, (40, 20))
+        scaled = pygame.transform.scale(car_image, (CAR_WIDTH, CAR_HEIGHT))
 
         self.screen.fill((0, 0, 0))
         

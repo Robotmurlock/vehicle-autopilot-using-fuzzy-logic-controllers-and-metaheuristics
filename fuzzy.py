@@ -199,6 +199,10 @@ class FuzzySystem:
         self.solution = None
         
     def fit(self, x0s):
+        # Restarting output mis
+        for mfo in self.output:
+            mfo.mi = 0
+
         # Calculate input membership values
         for i in range(0, self.inputs.size):
             x0 = x0s[i]
@@ -235,56 +239,56 @@ class FuzzySystem:
         self.inputs_info()
         self.output_info()
 
-if __name__ == "__main__":
-    left_sensor = FuzzyInput("left_sensor", np.array([
-        MFInput("close", np.array([0, 8]), np.array([1, 0])),
-        MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-        MFInput("far", np.array([12, 20]), np.array([0, 1])),
-    ]))
+left_sensor = FuzzyInput("left_sensor", np.array([
+    MFInput("close", np.array([0, 8]), np.array([1, 0])),
+    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
+    MFInput("far", np.array([12, 20]), np.array([0, 1])),
+]))
 
-    right_sensor = FuzzyInput("right_sensor", np.array([
-        MFInput("close", np.array([0, 8]), np.array([1, 0])),
-        MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-        MFInput("far", np.array([12, 20]), np.array([0, 1])),
-    ]))
+right_sensor = FuzzyInput("right_sensor", np.array([
+    MFInput("close", np.array([0, 8]), np.array([1, 0])),
+    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
+    MFInput("far", np.array([12, 20]), np.array([0, 1])),
+]))
 
-    front_sensor = FuzzyInput("front_sensor", np.array([
-        MFInput("close", np.array([0, 8]), np.array([1, 0])),
-        MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-        MFInput("far", np.array([12, 20]), np.array([0, 1])),
-    ]))
+front_sensor = FuzzyInput("front_sensor", np.array([
+    MFInput("close", np.array([0, 8]), np.array([1, 0])),
+    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
+    MFInput("far", np.array([12, 20]), np.array([0, 1])),
+]))
 
-    velocity = FuzzyOutput("velocity", np.array([
-        MFOutput("low", np.array([0, 10]), np.array([1, 0])),
-        MFOutput("middle", np.array([8, 10, 12, 16]), np.array([0, 1, 1, 0])),
-        MFOutput("high", np.array([14, 20]), np.array([0, 1])),
-    ]))
+velocity = FuzzyOutput("velocity", np.array([
+    MFOutput("low", np.array([0, 10]), np.array([1, 0])),
+    MFOutput("middle", np.array([8, 10, 12, 16]), np.array([0, 1, 1, 0])),
+    MFOutput("high", np.array([14, 20]), np.array([0, 1])),
+]))
 
-    angle = FuzzyOutput("angle", np.array([
-        MFOutput("left", np.array([120, 180]), np.array([1, 0])),
-        MFOutput("forward", np.array([50, 90, 130]), np.array([0, 1, 0])),
-        MFOutput("right", np.array([0, 60]), np.array([0, 1])),
-    ]))
+angle = FuzzyOutput("angle", np.array([
+    MFOutput("left", np.array([30, 90]), np.array([1, 0])),
+    MFOutput("forward", np.array([-40, 0, 40]), np.array([0, 1, 0])),
+    MFOutput("right", np.array([-90, -30]), np.array([0, 1])),
+]))
 
-    angle_rules = FuzzyRules(np.array([
-        Rule(np.array([left_sensor[0]]), angle[2]),
-        Rule(np.array([right_sensor[0]]), angle[0])
-    ]))
+angle_rules = FuzzyRules(np.array([
+    Rule(np.array([left_sensor[0]]), angle[2]),
+    Rule(np.array([right_sensor[0]]), angle[0])
+]))
 
-    velocity_rules = FuzzyRules(np.array([
-        Rule(np.array([front_sensor[2]]), velocity[2]),
-        Rule(np.array([front_sensor[0]]), velocity[0])
-    ]))
+velocity_rules = FuzzyRules(np.array([
+    Rule(np.array([front_sensor[2]]), velocity[2]),
+    Rule(np.array([front_sensor[0]]), velocity[0])
+]))
 
-    FSAngle = FuzzySystem(np.array([left_sensor, front_sensor, right_sensor]), angle, angle_rules)
-    FSVelocity = FuzzySystem(np.array([left_sensor, front_sensor, right_sensor]), velocity, velocity_rules)
+FSAngle = FuzzySystem(np.array([left_sensor, front_sensor, right_sensor]), angle, angle_rules)
+FSVelocity = FuzzySystem(np.array([left_sensor, front_sensor, right_sensor]), velocity, velocity_rules)
 
-    FSInput = np.array([3, 30, 15])
-    FSAngle.fit(FSInput)
-    FSVelocity.fit(FSInput)
-    print('Angle in degrees: ' + str(FSAngle.solution))
-    print('Velocity: ' + str(FSVelocity.solution))
-
-    FSAngle.full_info()
-    FSVelocity.full_info()
+#FSInput = np.array([3, 30, 15])
+#FSAngle.fit(FSInput)
+#FSVelocity.fit(FSInput)
+#print('Angle in degrees: ' + str(FSAngle.solution))
+#print('Velocity: ' + str(FSVelocity.solution))
+#FSAngle.full_info()
+#FSVelocity.full_info()
     
+if __name__ == "__main__":
+    pass
