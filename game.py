@@ -91,8 +91,8 @@ class Game:
 
 
 if __name__ == '__main__':
-    path, is_closed = path_generator.generate_convex_polygon()
-    # path, is_closed = path_generator.generate_sin_path()
+    # path, is_closed = path_generator.generate_convex_polygon()
+    path, is_closed = path_generator.generate_sin_path()
     
     game = Game(path, is_closed)
     

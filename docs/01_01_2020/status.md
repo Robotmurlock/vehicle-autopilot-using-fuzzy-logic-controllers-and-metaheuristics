@@ -1,0 +1,3 @@
+- Added path generation
+- Car is currently receiving random movement coords from a dummy decoder
+- Base fuzzy logic is implemented

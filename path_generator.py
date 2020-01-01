@@ -35,7 +35,7 @@ def generate_sin_path():
     num_of_points = 20
 
     for i in range(game.SCREEN_WIDTH):
-        coords1.append((i, math.sin(0.01*i) * 300 + 400))
+        coords1.append((i, math.sin(0.01*i) * 200 + 250))
 
     coords2 = lt.apply_translation(0, offset, coords1)
 
