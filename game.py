@@ -2,7 +2,7 @@
 import os
 import pygame
 import random
-from math import sin, radians, degrees, copysign
+from math import sin, degrees
 from pygame.math import Vector2
 import time
 import math
@@ -81,7 +81,7 @@ class Game:
             self.draw_screen()
 
             self.clock.tick(self.ticks)
-        
+
         pygame.quit()
 
     def draw_screen(self):
@@ -89,10 +89,11 @@ class Game:
         image_path = os.path.join(current_dir, IMAGE_DIR, IMAGE_NAME)
         car_image = pygame.image.load(image_path)
         scaled = pygame.transform.scale(car_image, (CAR_WIDTH, CAR_HEIGHT))
-        
+
         rotated_car = pygame.transform.rotate(scaled, self.car.angle)
 
-        self.screen.fill((250, 250, 250))
+        screen_color = (0, 0, 0)
+        self.screen.fill(screen_color)
 
         self.draw_path()
         print('Car position: ' + str(self.car.position))
@@ -105,8 +106,11 @@ class Game:
     def draw_path(self):
         color = PATH_COLOR
 
+        polygon = []
         for coords in self.path:
-            pygame.draw.lines(self.screen, color, self.closed_polygon, coords)
+            polygon += coords
+
+        pygame.draw.polygon(self.screen, color, polygon)
 
     def sensors(self):
         # front sensor
@@ -143,7 +147,7 @@ class Game:
 if __name__ == '__main__':
     # path, is_closed = path_generator.generate_convex_polygon()
     path, is_closed = path_generator.generate_sin_path()
-    
+
     game = Game(path, is_closed)
-    
+
     game.run()

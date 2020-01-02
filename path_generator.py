@@ -38,6 +38,7 @@ def generate_sin_path():
         coords1.append((i, math.sin(0.01*i) * 200 + 250))
 
     coords2 = lt.apply_translation(0, offset, coords1)
+    coords2.reverse() #? in order to properly match coords for polygon
 
     polygon = [coords1, coords2]
     is_closed = False
