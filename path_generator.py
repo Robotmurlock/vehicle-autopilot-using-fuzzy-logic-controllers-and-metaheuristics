@@ -24,6 +24,7 @@ def generate_convex_polygon():
     coords2 = lt.apply_translation(offset, offset, coords2)
 
     polygon = [coords1, coords2]
+    
     is_closed = True
     return polygon, is_closed
 
@@ -40,7 +41,8 @@ def generate_sin_path():
     coords2 = lt.apply_translation(0, offset, coords1)
     coords2.reverse() #? in order to properly match coords for polygon
 
-    polygon = [coords1, coords2]
+    # polygon = [coords1, coords2]
+    polygon = coords1 + coords2
     is_closed = False
 
     return polygon, is_closed

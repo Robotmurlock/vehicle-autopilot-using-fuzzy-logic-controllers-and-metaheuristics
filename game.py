@@ -23,6 +23,7 @@ CAR_POS_X = 10
 CAR_POS_Y = 400
 
 PATH_COLOR = (0, 255, 0)
+SCREEN_COLOR = (0, 0, 0)
 
 def distance(x1, y1, x2, y2):
     return math.sqrt((x1-x2)**2 + (y1-y2)**2)
@@ -92,8 +93,7 @@ class Game:
 
         rotated_car = pygame.transform.rotate(scaled, self.car.angle)
 
-        screen_color = (0, 0, 0)
-        self.screen.fill(screen_color)
+        self.screen.fill(SCREEN_COLOR)
 
         self.draw_path()
         print('Car position: ' + str(self.car.position))
@@ -104,13 +104,17 @@ class Game:
 
 
     def draw_path(self):
-        color = PATH_COLOR
 
-        polygon = []
-        for coords in self.path:
-            polygon += coords
-
-        pygame.draw.polygon(self.screen, color, polygon)
+        if not self.closed_polygon:
+            pygame.draw.polygon(self.screen, PATH_COLOR, self.path)
+        
+        else:
+            for i, polygon in enumerate(self.path):
+                if i % 2 == 0:
+                    draw_color = PATH_COLOR
+                else:
+                    draw_color = SCREEN_COLOR
+                pygame.draw.polygon(self.screen, draw_color, polygon)
 
     def sensors(self):
         # front sensor
@@ -145,8 +149,8 @@ class Game:
 
 
 if __name__ == '__main__':
-    # path, is_closed = path_generator.generate_convex_polygon()
-    path, is_closed = path_generator.generate_sin_path()
+    path, is_closed = path_generator.generate_convex_polygon()
+    # path, is_closed = path_generator.generate_sin_path()
 
     game = Game(path, is_closed)
 
