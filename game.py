@@ -8,7 +8,7 @@ import time
 import math
 import copy
 
-import path_generator
+from generator_functions import path_generator
 import decoder
 
 IMAGE_DIR = "img"

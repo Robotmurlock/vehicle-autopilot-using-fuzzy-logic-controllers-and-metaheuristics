@@ -1,8 +1,6 @@
 import numpy as np
 import random
 
-
-
 def generate_function(left_boundary, right_boundary):
     if random.random() > 0.5:
         return generate_trapezoidal_function(left_boundary, right_boundary)
