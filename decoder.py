@@ -4,9 +4,10 @@ import numpy as np
 import math
 
 def get_movement_params(car):
-    left_sensor_input = 30
-    front_sensor_input = 30
-    right_sensor_input = 30
+    print(car.left_sensor_input)
+    left_sensor_input = float(car.left_sensor_input)/5
+    front_sensor_input = float(car.front_sensor_input)/2
+    right_sensor_input = float(car.right_sensor_input)/5
 
     FSInput = np.array([left_sensor_input, front_sensor_input, right_sensor_input])
     fuzzy.FSAngle.fit(FSInput)

@@ -5,6 +5,8 @@ import random
 from math import sin, radians, degrees, copysign
 from pygame.math import Vector2
 import time
+import math
+import copy
 
 import path_generator
 import decoder
@@ -17,6 +19,13 @@ SCREEN_HEIGHT = 720
 
 CAR_WIDTH = 40
 CAR_HEIGHT = 20
+CAR_POS_X = 10
+CAR_POS_Y = 400
+
+PATH_COLOR = (0, 255, 0)
+
+def distance(x1, y1, x2, y2):
+    return math.sqrt((x1-x2)**2 + (y1-y2)**2)
 
 class Car:
     def __init__(self, x, y, angle=0.0, length=4):
@@ -24,6 +33,9 @@ class Car:
         self.velocity = Vector2(0.0, 0.0)
         self.angle = angle
         self.length = length
+        self.left_sensor_input = 0
+        self.front_sensor_input = 0
+        self.right_sensor_input = 0
 
     def update(self, dt, dx, dy, drot):
         self.velocity += Vector2(dx, dy)
@@ -47,26 +59,25 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
-        self.car = Car(100, 100)
+        self.car = Car(CAR_POS_X, CAR_POS_Y)
 
         self.path = path
         self.closed_polygon = closed_polygon
 
     def run(self):
-        car = Car(100, 100)
+        car = Car(CAR_POS_X, CAR_POS_Y)
 
         while not self.exit:
-            #time.sleep(0.5)
+            time.sleep(1)
             dt = self.clock.get_time() / 1000
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.exit = True
 
-            dx, dy, drot = decoder.get_movement_params(car)
+            dx, dy, drot = decoder.get_movement_params(self.car)
             self.car.update(dt, dx, dy, drot)
 
-            #print("Car position", self.car.position)
             self.draw_screen()
 
             self.clock.tick(self.ticks)
@@ -78,21 +89,55 @@ class Game:
         image_path = os.path.join(current_dir, IMAGE_DIR, IMAGE_NAME)
         car_image = pygame.image.load(image_path)
         scaled = pygame.transform.scale(car_image, (CAR_WIDTH, CAR_HEIGHT))
-
-        self.screen.fill((0, 0, 0))
         
         rotated_car = pygame.transform.rotate(scaled, self.car.angle)
 
+        self.screen.fill((250, 250, 250))
+
         self.draw_path()
+        print('Car position: ' + str(self.car.position))
+        self.car.left_sensor_input, self.car.front_sensor_input, self.car.right_sensor_input = self.sensors()
 
         self.screen.blit(rotated_car, self.car.position)
         pygame.display.flip()
 
+
     def draw_path(self):
-        color = (0, 255, 0)
+        color = PATH_COLOR
 
         for coords in self.path:
             pygame.draw.lines(self.screen, color, self.closed_polygon, coords)
+
+    def sensors(self):
+        # front sensor
+        pos_x = self.car.position.x
+        pos_y = self.car.position.y
+        while(pos_x < SCREEN_WIDTH and self.screen.get_at((int(pos_x), int(pos_y))) != PATH_COLOR):
+            pos_x = pos_x + 1
+        print('front sensor: ' + str(int(pos_x)) + ' ' + str(int(pos_y)))
+        front_sensor_input = str(distance(self.car.position.x+CAR_WIDTH, self.car.position.y, pos_x, pos_y))
+        print('front sensor input: ' + front_sensor_input)
+
+        # left sensor
+        pos_x = self.car.position.x
+        pos_y = self.car.position.y
+        while(pos_y > 0 and self.screen.get_at((int(pos_x), int(pos_y))) != PATH_COLOR):
+            pos_y = pos_y - 1
+        print('left sensor: ' + str(int(pos_x)) + ' ' + str(int(pos_y)))
+        left_sensor_input = str(distance(self.car.position.x+CAR_WIDTH, self.car.position.y, pos_x, pos_y))
+        print('front sensor input: ' + left_sensor_input)
+
+
+        # right sensor
+        pos_x = self.car.position.x
+        pos_y = self.car.position.y
+        while(pos_y < SCREEN_HEIGHT and self.screen.get_at((int(pos_x), int(pos_y))) != PATH_COLOR):
+            pos_y = pos_y + 1
+        print('right sensor: ' + str(int(pos_x)) + ' ' + str(int(pos_y)))
+        right_sensor_input = str(distance(self.car.position.x+CAR_WIDTH, self.car.position.y, pos_x, pos_y))
+        print('front sensor input: ' + right_sensor_input)
+
+        return (left_sensor_input, front_sensor_input, right_sensor_input)
 
 
 if __name__ == '__main__':

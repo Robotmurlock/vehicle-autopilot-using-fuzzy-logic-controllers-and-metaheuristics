@@ -50,9 +50,9 @@ class MFInput:
         return (x2 - self.x0) / (x2 - x1)
         
     def getMi(self):
-        if self.x0 < self.points[0][0]: 
+        if self.x0 <= self.points[0][0]: 
             return self.points[0][1]
-        if self.x0 > self.points[-1][0]:
+        if self.x0 >= self.points[-1][0]:
             return self.points[-1][1]
         for i in range(1, self.size):
             x1 = self.points[i - 1][0]
