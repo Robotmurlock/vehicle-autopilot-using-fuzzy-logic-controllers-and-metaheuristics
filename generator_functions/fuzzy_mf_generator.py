@@ -7,7 +7,6 @@ def generate_function(left_boundary, right_boundary):
     else:
         return generate_triangluar_function(left_boundary, right_boundary)
 
-
 def generate_trapezoidal_function(left_boundary, right_boundary):
     print("generate_trapezoidal_function...")
 
@@ -25,5 +24,4 @@ def generate_triangluar_function(left_boundary, right_boundary):
     return xs, ys
 
 if __name__ == "__main__":
-    print(generate_trapezoidal_function(-30, 30))
-    print(generate_triangluar_function(-30, 30))
+    print(generate_function(-30, 30))

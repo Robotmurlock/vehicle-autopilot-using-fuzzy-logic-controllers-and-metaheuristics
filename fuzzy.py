@@ -23,6 +23,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from generator_functions import fuzzy_mf_generator
+
 from enum import Enum, unique
 @unique
 class Logic(Enum):
@@ -239,35 +241,74 @@ class FuzzySystem:
         self.inputs_info()
         self.output_info()
 
-left_sensor = FuzzyInput("left_sensor", np.array([
-    MFInput("close", np.array([0, 8]), np.array([1, 0])),
-    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([12, 20]), np.array([0, 1])),
-]))
 
-right_sensor = FuzzyInput("right_sensor", np.array([
-    MFInput("close", np.array([0, 8]), np.array([1, 0])),
-    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([12, 20]), np.array([0, 1])),
-]))
+def generate_fuzzy_class(class_name, mi_function_names, is_input_fuzzy, boundaries):
+    mi_array = []
+    
+    for i, mi_name in enumerate(mi_function_names):
+        
+        xs, ys = fuzzy_mf_generator.generate_function(boundaries[i][0], boundaries[i][1])
+        if is_input_fuzzy:
+            mf = MFInput(mi_name, xs, ys)
 
-front_sensor = FuzzyInput("front_sensor", np.array([
-    MFInput("close", np.array([0, 8]), np.array([1, 0])),
-    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([12, 20]), np.array([0, 1])),
-]))
+        else:
+            mf = MFOutput(mi_name, xs, ys)
+        mi_array.append(mf)
 
-velocity = FuzzyOutput("velocity", np.array([
-    MFOutput("low", np.array([0, 10]), np.array([1, 0])),
-    MFOutput("middle", np.array([8, 10, 12, 16]), np.array([0, 1, 1, 0])),
-    MFOutput("high", np.array([14, 20]), np.array([0, 1])),
-]))
+    if is_input_fuzzy:
+        return FuzzyInput(class_name, np.array(mi_array))
+    else:
+        return FuzzyOutput(class_name, np.array(mi_array))
+            
 
-angle = FuzzyOutput("angle", np.array([
-    MFOutput("left", np.array([30, 90]), np.array([1, 0])),
-    MFOutput("forward", np.array([-40, 0, 40]), np.array([0, 1, 0])),
-    MFOutput("right", np.array([-90, -30]), np.array([0, 1])),
-]))
+
+#TODO boundaries should be decoded from the GA
+mf_names_dist = ["close", "midrange", "far"]
+mf_boundaries_dist = [(0, 8), (6, 14), (12, 20)]
+
+left_sensor = generate_fuzzy_class("left_sensor", mf_names_dist, True, mf_boundaries_dist)
+right_sensor = generate_fuzzy_class("right_sensor", mf_names_dist, True, mf_boundaries_dist)
+front_sensor = generate_fuzzy_class("front_sensor", mf_names_dist, True, mf_boundaries_dist)
+
+mf_names_velocity = ["low", "middle", "high"]
+mf_boundaries_velocity = [(0, 8), (6, 14), (12, 20)]
+velocity = generate_fuzzy_class("velocity", mf_names_velocity, False, mf_boundaries_velocity)
+
+mf_names_angle = ["left", "forward", "right"]
+mf_boundaries_angle = [(30, 90), (-40, 40), (-90, -30)]
+angle = generate_fuzzy_class("angle", mf_names_angle, False, mf_boundaries_angle)
+
+
+
+# left_sensor = FuzzyInput("left_sensor", np.array([
+#     MFInput("close", np.array([0, 8]), np.array([1, 0])),
+#     MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
+#     MFInput("far", np.array([12, 20]), np.array([0, 1])),
+# ]))
+
+# right_sensor = FuzzyInput("right_sensor", np.array([
+#     MFInput("close", np.array([0, 8]), np.array([1, 0])),
+#     MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
+#     MFInput("far", np.array([12, 20]), np.array([0, 1])),
+# ]))
+
+# front_sensor = FuzzyInput("front_sensor", np.array([
+#     MFInput("close", np.array([0, 8]), np.array([1, 0])),
+#     MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
+#     MFInput("far", np.array([12, 20]), np.array([0, 1])),
+# ]))
+
+# velocity = FuzzyOutput("velocity", np.array([
+#     MFOutput("low", np.array([0, 10]), np.array([1, 0])),
+#     MFOutput("middle", np.array([8, 10, 12, 16]), np.array([0, 1, 1, 0])),
+#     MFOutput("high", np.array([14, 20]), np.array([0, 1])),
+# ]))
+
+# angle = FuzzyOutput("angle", np.array([
+#     MFOutput("left", np.array([30, 90]), np.array([1, 0])),
+#     MFOutput("forward", np.array([-40, 0, 40]), np.array([0, 1, 0])),
+#     MFOutput("right", np.array([-90, -30]), np.array([0, 1])),
+# ]))
 
 angle_rules = FuzzyRules(np.array([
     Rule(np.array([left_sensor[0]]), angle[2]),
