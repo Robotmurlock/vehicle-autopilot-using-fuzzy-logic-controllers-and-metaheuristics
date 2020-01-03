@@ -245,6 +245,45 @@ class FuzzySystem:
         self.inputs_info()
         self.output_info()
 
+
+def generate_fuzzy_class(class_name, mi_function_names, is_input_fuzzy, boundaries):
+    mi_array = []
+    
+    for i, mi_name in enumerate(mi_function_names):
+        
+        xs, ys = fuzzy_mf_generator.generate_function(boundaries[i][0], boundaries[i][1])
+        if is_input_fuzzy:
+            mf = MFInput(mi_name, xs, ys)
+
+        else:
+            mf = MFOutput(mi_name, xs, ys)
+        mi_array.append(mf)
+
+    if is_input_fuzzy:
+        return FuzzyInput(class_name, np.array(mi_array))
+    else:
+        return FuzzyOutput(class_name, np.array(mi_array))
+
+def test_function_generation():
+
+    #TODO boundaries should be decoded from the GA
+    mf_names_dist = ["close", "midrange", "far"]
+    mf_boundaries_dist = [(0, 8), (6, 14), (12, 20)]
+
+    left_sensor = generate_fuzzy_class("left_sensor", mf_names_dist, True, mf_boundaries_dist)
+    right_sensor = generate_fuzzy_class("right_sensor", mf_names_dist, True, mf_boundaries_dist)
+    front_sensor = generate_fuzzy_class("front_sensor", mf_names_dist, True, mf_boundaries_dist)
+
+    mf_names_velocity = ["low", "middle", "high"]
+    mf_boundaries_velocity = [(0, 8), (6, 14), (12, 20)]
+    velocity = generate_fuzzy_class("velocity", mf_names_velocity, False, mf_boundaries_velocity)
+
+    mf_names_angle = ["left", "forward", "right"]
+    mf_boundaries_angle = [(30, 90), (-40, 40), (-90, -30)]
+    angle = generate_fuzzy_class("angle", mf_names_angle, False, mf_boundaries_angle)
+
+
+
 left_sensor = FuzzyInput("left_sensor", np.array([
     MFInput("close", np.array([0, 12]), np.array([1, 0])),
     MFInput("midrange", np.array([10, 16, 20, 28]), np.array([0, 1, 1, 0])),
@@ -277,44 +316,6 @@ angle = FuzzyOutput("angle", np.array([
     MFOutput("right", np.array([-45, -10]), np.array([0, 1])),
 ]))
 
-# def generate_fuzzy_class(class_name, mi_function_names, is_input_fuzzy, boundaries):
-#     mi_array = []
-    
-#     for i, mi_name in enumerate(mi_function_names):
-        
-#         xs, ys = fuzzy_mf_generator.generate_function(boundaries[i][0], boundaries[i][1])
-#         if is_input_fuzzy:
-#             mf = MFInput(mi_name, xs, ys)
-
-#         else:
-#             mf = MFOutput(mi_name, xs, ys)
-#         mi_array.append(mf)
-
-#     if is_input_fuzzy:
-#         return FuzzyInput(class_name, np.array(mi_array))
-#     else:
-#         return FuzzyOutput(class_name, np.array(mi_array))
-            
-
-
-# #TODO boundaries should be decoded from the GA
-# mf_names_dist = ["close", "midrange", "far"]
-# mf_boundaries_dist = [(0, 8), (6, 14), (12, 20)]
-
-# left_sensor = generate_fuzzy_class("left_sensor", mf_names_dist, True, mf_boundaries_dist)
-# right_sensor = generate_fuzzy_class("right_sensor", mf_names_dist, True, mf_boundaries_dist)
-# front_sensor = generate_fuzzy_class("front_sensor", mf_names_dist, True, mf_boundaries_dist)
-
-# mf_names_velocity = ["low", "middle", "high"]
-# mf_boundaries_velocity = [(0, 8), (6, 14), (12, 20)]
-# velocity = generate_fuzzy_class("velocity", mf_names_velocity, False, mf_boundaries_velocity)
-
-# mf_names_angle = ["left", "forward", "right"]
-# mf_boundaries_angle = [(30, 90), (-40, 40), (-90, -30)]
-# angle = generate_fuzzy_class("angle", mf_names_angle, False, mf_boundaries_angle)
-
-
-
 angle_rules = FuzzyRules(np.array([
     Rule(np.array([left_sensor[0], front_sensor[0]]), angle[2]),
     Rule(np.array([right_sensor[0], front_sensor[0]]), angle[0]),
@@ -329,15 +330,7 @@ velocity_rules = FuzzyRules(np.array([
 ]))
 
 FSAngle = FuzzySystem(np.array([left_sensor, front_sensor, right_sensor]), angle, angle_rules)
-FSVelocity = FuzzySystem(np.array([left_sensor, front_sensor, right_sensor]), velocity, velocity_rules)
+FSVelocity = FuzzySystem(np.array([left_sensor, front_sensor, right_sensor]), velocity, velocity_rules)    
 
-#FSInput = np.array([3, 30, 15])
-#FSAngle.fit(FSInput)
-#FSVelocity.fit(FSInput)
-#print('Angle in degrees: ' + str(FSAngle.solution))
-#print('Velocity: ' + str(FSVelocity.solution))
-#FSAngle.full_info()
-#FSVelocity.full_info()
-    
 if __name__ == "__main__":
     pass
