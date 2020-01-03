@@ -38,6 +38,7 @@ class MFInput:
         self.mi = None
     
     def setMi(self, x0):
+        # x0 - input value
         self.x0 = x0
         self.mi = self.getMi()
         
@@ -128,7 +129,8 @@ class Rule:
             mi = 1
             for i in range(0, n):
                 mi = min(mi, self.inputs[i].mi)
-                
+
+        # Union of all rules    
         self.output.mi = max(self.output.mi, mi)
         
     def __str__(self):
@@ -203,6 +205,7 @@ class FuzzySystem:
         for mfo in self.output:
             mfo.mi = 0
 
+        # Fazzification
         # Calculate input membership values
         for i in range(0, self.inputs.size):
             x0 = x0s[i]
@@ -212,7 +215,8 @@ class FuzzySystem:
         # Apply rules
         for i in range(0, self.rules.size):
             self.rules[i].apply_rule()
-            
+
+        # Defazzifaction   
         # Calculate output membership value (centroid method)
         numerator = 0
         denominator = 0 
@@ -240,42 +244,47 @@ class FuzzySystem:
         self.output_info()
 
 left_sensor = FuzzyInput("left_sensor", np.array([
-    MFInput("close", np.array([0, 8]), np.array([1, 0])),
-    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([12, 20]), np.array([0, 1])),
+    MFInput("close", np.array([0, 12]), np.array([1, 0])),
+    MFInput("midrange", np.array([10, 16, 20, 28]), np.array([0, 1, 1, 0])),
+    MFInput("far", np.array([24, 40, 45]), np.array([0, 1, 0])),
+    MFInput("very far", np.array([35, 100]), np.array([0, 1])),
 ]))
 
 right_sensor = FuzzyInput("right_sensor", np.array([
-    MFInput("close", np.array([0, 8]), np.array([1, 0])),
-    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([12, 20]), np.array([0, 1])),
+    MFInput("close", np.array([0, 12]), np.array([1, 0])),
+    MFInput("midrange", np.array([10, 16, 20, 28]), np.array([0, 1, 1, 0])),
+    MFInput("far", np.array([24, 40, 45]), np.array([0, 1, 0])),
+    MFInput("very far", np.array([35, 100]), np.array([0, 1])),
 ]))
 
 front_sensor = FuzzyInput("front_sensor", np.array([
-    MFInput("close", np.array([0, 8]), np.array([1, 0])),
+    MFInput("close", np.array([0, 10]), np.array([1, 0])),
     MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
     MFInput("far", np.array([12, 20]), np.array([0, 1])),
 ]))
 
 velocity = FuzzyOutput("velocity", np.array([
-    MFOutput("low", np.array([0, 10]), np.array([1, 0])),
-    MFOutput("middle", np.array([8, 10, 12, 16]), np.array([0, 1, 1, 0])),
-    MFOutput("high", np.array([14, 20]), np.array([0, 1])),
+    MFOutput("low", np.array([0.5, 1.5]), np.array([1, 0])),
+    MFOutput("middle", np.array([1, 1.5, 2, 2.5]), np.array([0, 1, 1, 0])),
+    MFOutput("high", np.array([2, 3]), np.array([0, 1])),
 ]))
 
 angle = FuzzyOutput("angle", np.array([
-    MFOutput("left", np.array([30, 90]), np.array([1, 0])),
-    MFOutput("forward", np.array([-40, 0, 40]), np.array([0, 1, 0])),
-    MFOutput("right", np.array([-90, -30]), np.array([0, 1])),
+    MFOutput("left", np.array([10, 45]), np.array([1, 0])),
+    MFOutput("forward", np.array([-10, 0, 10]), np.array([0, 1, 0])),
+    MFOutput("right", np.array([-45, -10]), np.array([0, 1])),
 ]))
 
 angle_rules = FuzzyRules(np.array([
-    Rule(np.array([left_sensor[0]]), angle[2]),
-    Rule(np.array([right_sensor[0]]), angle[0])
+    Rule(np.array([left_sensor[0], front_sensor[0]]), angle[2]),
+    Rule(np.array([right_sensor[0], front_sensor[0]]), angle[0]),
+    Rule(np.array([front_sensor[0], left_sensor[3]]), angle[0]),
+    Rule(np.array([front_sensor[0], right_sensor[3]]), angle[2])
 ]))
 
 velocity_rules = FuzzyRules(np.array([
     Rule(np.array([front_sensor[2]]), velocity[2]),
+    Rule(np.array([front_sensor[1]]), velocity[1]),
     Rule(np.array([front_sensor[0]]), velocity[0])
 ]))
 

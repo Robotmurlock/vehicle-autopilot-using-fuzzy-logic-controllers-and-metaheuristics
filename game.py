@@ -23,10 +23,13 @@ CAR_POS_X = 10
 CAR_POS_Y = 400
 
 PATH_COLOR = (0, 255, 0)
-SCREEN_COLOR = (0, 0, 0)
+SCREEN_COLOR = (100, 100, 100)
 
 def distance(x1, y1, x2, y2):
     return math.sqrt((x1-x2)**2 + (y1-y2)**2)
+
+def valid_position(x, y):
+    return x > 0 and y > 0 and x < SCREEN_WIDTH and y < SCREEN_HEIGHT
 
 class Car:
     def __init__(self, x, y, angle=0.0, length=4):
@@ -38,18 +41,38 @@ class Car:
         self.front_sensor_input = 0
         self.right_sensor_input = 0
 
-    def update(self, dt, dx, dy, drot):
-        self.velocity += Vector2(dx, dy)
-
-        turning_radius = self.length / sin(drot)
-        angular_velocity = self.velocity.x / turning_radius
+    def update(self, dt, ds, drot):
+        self.velocity = Vector2(ds, 0)
 
         self.position += self.velocity.rotate(-self.angle) * dt
+        self.check_borders()
+        self.check_collision()
+        self.angle += degrees(drot) * dt
+
+    def check_borders(self):
         self.position.x = max(self.position.x, 0)
         self.position.y = max(self.position.y, 0)
         self.position.x = min(self.position.x, SCREEN_WIDTH - CAR_WIDTH)
         self.position.y = min(self.position.y, SCREEN_HEIGHT - CAR_HEIGHT)
-        self.angle += degrees(drot) * dt
+
+    def check_collision(self):
+        return '#TODO'
+
+    def center_position(self):
+        return Vector2(self.position.x + CAR_WIDTH/2, self.position.y + CAR_HEIGHT/2)
+
+    def sensor(self, name, screen, angle_direction):
+        angle = -self.angle/180*math.pi
+        pos_x = self.center_position().x
+        pos_y = self.center_position().y
+        z = 0
+        while(valid_position(int(pos_x), int(pos_y)) and screen.get_at((int(pos_x), int(pos_y))) == PATH_COLOR):
+            z = z + 1
+            pos_x = self.center_position().x + z*math.cos(angle - angle_direction)
+            pos_y = self.center_position().y + z*math.sin(angle - angle_direction)
+            
+        sensor_input = str(distance(self.center_position().x, self.center_position().y, pos_x, pos_y))
+        return sensor_input
 
 
 class Game:
@@ -69,18 +92,15 @@ class Game:
         car = Car(CAR_POS_X, CAR_POS_Y)
 
         while not self.exit:
-            time.sleep(1)
             dt = self.clock.get_time() / 1000
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.exit = True
 
-            dx, dy, drot = decoder.get_movement_params(self.car)
-            self.car.update(dt, dx, dy, drot)
-
+            ds, drot = decoder.get_movement_params(self.car)
+            self.car.update(dt, ds, drot)
             self.draw_screen()
-
             self.clock.tick(self.ticks)
 
         pygame.quit()
@@ -94,11 +114,8 @@ class Game:
         rotated_car = pygame.transform.rotate(scaled, self.car.angle)
 
         self.screen.fill(SCREEN_COLOR)
-
         self.draw_path()
-        print('Car position: ' + str(self.car.position))
         self.car.left_sensor_input, self.car.front_sensor_input, self.car.right_sensor_input = self.sensors()
-
         self.screen.blit(rotated_car, self.car.position)
         pygame.display.flip()
 
@@ -107,7 +124,6 @@ class Game:
 
         if not self.closed_polygon:
             pygame.draw.polygon(self.screen, PATH_COLOR, self.path)
-        
         else:
             for i, polygon in enumerate(self.path):
                 if i % 2 == 0:
@@ -117,34 +133,9 @@ class Game:
                 pygame.draw.polygon(self.screen, draw_color, polygon)
 
     def sensors(self):
-        # front sensor
-        pos_x = self.car.position.x
-        pos_y = self.car.position.y
-        while(pos_x < SCREEN_WIDTH and self.screen.get_at((int(pos_x), int(pos_y))) != PATH_COLOR):
-            pos_x = pos_x + 1
-        print('front sensor: ' + str(int(pos_x)) + ' ' + str(int(pos_y)))
-        front_sensor_input = str(distance(self.car.position.x+CAR_WIDTH, self.car.position.y, pos_x, pos_y))
-        print('front sensor input: ' + front_sensor_input)
-
-        # left sensor
-        pos_x = self.car.position.x
-        pos_y = self.car.position.y
-        while(pos_y > 0 and self.screen.get_at((int(pos_x), int(pos_y))) != PATH_COLOR):
-            pos_y = pos_y - 1
-        print('left sensor: ' + str(int(pos_x)) + ' ' + str(int(pos_y)))
-        left_sensor_input = str(distance(self.car.position.x+CAR_WIDTH, self.car.position.y, pos_x, pos_y))
-        print('front sensor input: ' + left_sensor_input)
-
-
-        # right sensor
-        pos_x = self.car.position.x
-        pos_y = self.car.position.y
-        while(pos_y < SCREEN_HEIGHT and self.screen.get_at((int(pos_x), int(pos_y))) != PATH_COLOR):
-            pos_y = pos_y + 1
-        print('right sensor: ' + str(int(pos_x)) + ' ' + str(int(pos_y)))
-        right_sensor_input = str(distance(self.car.position.x+CAR_WIDTH, self.car.position.y, pos_x, pos_y))
-        print('front sensor input: ' + right_sensor_input)
-
+        front_sensor_input = self.car.sensor('front', self.screen, 0)
+        left_sensor_input = self.car.sensor('left', self.screen, math.pi/2)
+        right_sensor_input = self.car.sensor('right', self.screen, -math.pi/2)
         return (left_sensor_input, front_sensor_input, right_sensor_input)
 
 
