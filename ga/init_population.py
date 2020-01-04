@@ -54,15 +54,24 @@ def generate_code_for_single_function(far_left, far_right):
         code += [1]
 
     code += [left_boundary, right_boundary]
-    code += xs.tolist() #xs
-    code += ys.tolist() #ys
+    code += xs.tolist()
+    code += ys.tolist()
+    return code
+def generate_left_sensor_code():
+    num_of_mf_functions = 4
+    far_left = 0
+    far_right = 100
+
+    code = []
+    for i in range(num_of_mf_functions):
+        code += generate_code_for_single_function(far_left, far_right)
     return code
 
 def build_chromosome():
     left_sensor_code = generate_left_sensor_code()
 
 if __name__ == "__main__":
-    print(generate_code_for_single_function(0, 90))
+    print(generate_left_sensor_code())
 
 
 
