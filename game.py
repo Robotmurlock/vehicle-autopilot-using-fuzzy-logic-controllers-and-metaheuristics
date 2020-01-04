@@ -56,7 +56,7 @@ class Car:
         self.position.y = min(self.position.y, SCREEN_HEIGHT - CAR_HEIGHT)
 
     def check_collision(self):
-        return '#TODO'
+        return 
 
     def center_position(self):
         return Vector2(self.position.x + CAR_WIDTH/2, self.position.y + CAR_HEIGHT/2)
