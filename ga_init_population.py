@@ -1,67 +1,40 @@
-"""
-Population  follows the following rules
-- left_sensor - 4 MFInput functions (close, midrange, far, very far)
-    each function has codes for:
-    - range
-    - critical_points
-    - function shape (trapezoid / triangular)
-
-- right_sensor - 4 MFInput functions (close, midrange, far, very far)
-    each function has codes for:
-    - range
-    - critical_points
-    - function shape (trapezoid / triangular)
-
-- front_sensor - 3 MFInput functions (close, midrange, far)
-    each function has codes for:
-    - range
-    - critical_points
-    - function shape (trapezoid / triangular)
-
-- angle - 3 MFOutput functions (left, forward, right)
-    each function has codes for:
-    - range
-    - critical_points
-    - function shape (trapezoid / triangular)
-
-- velocity - 3 MFOutput functions (low, middle, high)
-    each function has codes for:
-    - range
-    - critical_points
-    - function shape (trapezoid / triangular)
-"""
 import random
 import numpy as np
-import fuzzy_mf_generator
-
+import ga_fuzzy_mf_generator
 
 ALL_FUZZY_FUNCS = {
     "left_sensor": {
         "num_of_mf_functions" : 4,
         "left_boundary": 0,
-        "right_boundary": 100
+        "right_boundary": 100,
+        "mf_names": ["close", "midrange", "far"]
     },
     "right_sensor": {
         "num_of_mf_functions" : 4,
         "left_boundary": 0,
-        "right_boundary": 100
+        "right_boundary": 100,
+        "mf_names": ["close", "midrange", "far"]
     },
     "front_sensor": {
         "num_of_mf_functions" : 3,
         "left_boundary": 0,
-        "right_boundary": 20
+        "right_boundary": 20,
+        "mf_names": ["close", "midrange", "far"]
     },
     "velocity": {
         "num_of_mf_functions" : 3,
         "left_boundary": 0,
-        "right_boundary": 10
+        "right_boundary": 10,
+        "mf_names": ["low", "middle", "high"]
     },
     "angle": {
         "num_of_mf_functions" : 3,
         "left_boundary": -45,
-        "right_boundary": 45
+        "right_boundary": 45,
+        "mf_names": ["left", "forward", "right"]
     }
 }
+
 NUM_OF_ALL_MF_FUNCTIONS = 4 + 4 + 3 + 3 +3
 
 def generate_valid_boundaries(left_boundary, right_boundary):
@@ -72,7 +45,7 @@ def generate_valid_boundaries(left_boundary, right_boundary):
     return left, right
 
 def generate_code_for_single_function(left_boundary, right_boundary):
-    code = fuzzy_mf_generator.generate_function(left_boundary, right_boundary)
+    code = ga_fuzzy_mf_generator.generate_function(left_boundary, right_boundary)
     print(code)
     return code
 
@@ -92,6 +65,27 @@ def generate_code_for_all_fuzzy_functions():
 
 def build_chromosome():
     chromosome = generate_code_for_all_fuzzy_functions()
+
+
+
+
+# TODO See how to move this to fuzzy, probably ditch the whole directories thing and use prefixes (eg. ga_init_population) or sth
+def buiild_single_fuzzy_io(mf_trapezoids, is_input, mf_names):
+    
+    mfs = []
+    for i in range(mf_trapezoids):
+        xs = np.array(mf_trapezoids[i])
+        ys = np.array([0, 1, 1, 0])
+        
+        if i == 0:
+            xs = np.array(mf_trapezoids[i][3], mf_trapezoids[i][2])
+            ys = np.array([1, 0])
+        if i == len(mf_trapezoids):
+            xs = np.array(mf_trapezoids[i][0], mf_trapezoids[i][1])
+            ys = np.array([0, 1])
+
+        mfs.append(mf_names[i], xs, ys)
+
 
 if __name__ == "__main__":
     print(generate_code_for_all_fuzzy_functions())
