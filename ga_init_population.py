@@ -41,7 +41,9 @@ ALL_FUZZY_FUNCS = {
         "left_boundary": 0,
         "right_boundary": 10,
         "mf_names": ["low", "middle", "high"],
-        "is_input": False
+        "is_input": False,
+        "left_pos_in_chromosome": 11,
+        "right_pos_in_chromosome": 14,
     },
     "angle": {
         "name": "angle",
@@ -49,7 +51,9 @@ ALL_FUZZY_FUNCS = {
         "left_boundary": -45,
         "right_boundary": 45,
         "mf_names": ["left", "forward", "right"],
-        "is_input": False
+        "is_input": False,
+        "left_pos_in_chromosome": 14,
+        "right_pos_in_chromosome": 17,
     }
 }
 
@@ -83,10 +87,6 @@ def generate_code_for_all_fuzzy_functions():
     
     return code
 
-
-def build_chromosome():
-    chromosome = generate_code_for_all_fuzzy_functions()
-
 def build_single_fuzzy_io(mf_trapezoids, ff):
     
     mfs = []
@@ -116,11 +116,15 @@ def build_single_fuzzy_io(mf_trapezoids, ff):
     else:
         return fuzzy.FuzzyOutput(ff["name"], np.array(mfs))
 
+def build_fuzzy_system():
+    mf_trapezoids = generate_code_for_all_fuzzy_functions()
+    system = []
+    for func_name in ALL_FUZZY_FUNCS:
+        system.append(build_single_fuzzy_io(mf_trapezoids, ALL_FUZZY_FUNCS[func_name]))
+    
+    return system
+
 
 if __name__ == "__main__":
-    mf_trapezoids = generate_code_for_all_fuzzy_functions()
-    ff = ALL_FUZZY_FUNCS["left_sensor"]
-    single_fuzzy_io = build_single_fuzzy_io(mf_trapezoids, ff)
-    print(single_fuzzy_io.__str__())
-
-
+    left_sensor, right_sensor, front_sensor, velocity, angle = build_fuzzy_system()
+    print(left_sensor, right_sensor, front_sensor, velocity, angle, sep="\n")
