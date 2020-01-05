@@ -23,6 +23,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+import ga_init_population
+
 from enum import Enum, unique
 @unique
 class Logic(Enum):
@@ -244,38 +246,43 @@ class FuzzySystem:
         self.output_info()
 
 
+def generate_default_system():
+    left_sensor = FuzzyInput("left_sensor", np.array([
+        MFInput("close", np.array([0, 12]), np.array([1, 0])),
+        MFInput("midrange", np.array([10, 16, 20, 28]), np.array([0, 1, 1, 0])),
+        MFInput("far", np.array([24, 40, 45]), np.array([0, 1, 0])),
+        MFInput("very far", np.array([35, 100]), np.array([0, 1])),
+    ]))
 
-left_sensor = FuzzyInput("left_sensor", np.array([
-    MFInput("close", np.array([0, 12]), np.array([1, 0])),
-    MFInput("midrange", np.array([10, 16, 20, 28]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([24, 40, 45]), np.array([0, 1, 0])),
-    MFInput("very far", np.array([35, 100]), np.array([0, 1])),
-]))
+    right_sensor = FuzzyInput("right_sensor", np.array([
+        MFInput("close", np.array([0, 12]), np.array([1, 0])),
+        MFInput("midrange", np.array([10, 16, 20, 28]), np.array([0, 1, 1, 0])),
+        MFInput("far", np.array([24, 40, 45]), np.array([0, 1, 0])),
+        MFInput("very far", np.array([35, 100]), np.array([0, 1])),
+    ]))
 
-right_sensor = FuzzyInput("right_sensor", np.array([
-    MFInput("close", np.array([0, 12]), np.array([1, 0])),
-    MFInput("midrange", np.array([10, 16, 20, 28]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([24, 40, 45]), np.array([0, 1, 0])),
-    MFInput("very far", np.array([35, 100]), np.array([0, 1])),
-]))
+    front_sensor = FuzzyInput("front_sensor", np.array([
+        MFInput("close", np.array([0, 10]), np.array([1, 0])),
+        MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
+        MFInput("far", np.array([12, 20]), np.array([0, 1])),
+    ]))
 
-front_sensor = FuzzyInput("front_sensor", np.array([
-    MFInput("close", np.array([0, 10]), np.array([1, 0])),
-    MFInput("midrange", np.array([6, 10, 12, 14]), np.array([0, 1, 1, 0])),
-    MFInput("far", np.array([12, 20]), np.array([0, 1])),
-]))
+    velocity = FuzzyOutput("velocity", np.array([
+        MFOutput("low", np.array([0.5, 1.5]), np.array([1, 0])),
+        MFOutput("middle", np.array([1, 1.5, 2, 2.5]), np.array([0, 1, 1, 0])),
+        MFOutput("high", np.array([2, 3]), np.array([0, 1])),
+    ]))
 
-velocity = FuzzyOutput("velocity", np.array([
-    MFOutput("low", np.array([0.5, 1.5]), np.array([1, 0])),
-    MFOutput("middle", np.array([1, 1.5, 2, 2.5]), np.array([0, 1, 1, 0])),
-    MFOutput("high", np.array([2, 3]), np.array([0, 1])),
-]))
+    angle = FuzzyOutput("angle", np.array([
+        MFOutput("left", np.array([10, 45]), np.array([1, 0])),
+        MFOutput("forward", np.array([-10, 0, 10]), np.array([0, 1, 0])),
+        MFOutput("right", np.array([-45, -10]), np.array([0, 1])),
+    ]))
+    return left_sensor, right_sensor, front_sensor, velocity, angle 
 
-angle = FuzzyOutput("angle", np.array([
-    MFOutput("left", np.array([10, 45]), np.array([1, 0])),
-    MFOutput("forward", np.array([-10, 0, 10]), np.array([0, 1, 0])),
-    MFOutput("right", np.array([-45, -10]), np.array([0, 1])),
-]))
+
+# left_sensor, right_sensor, front_sensor, velocity, angle = ga_init_population.build_fuzzy_system()
+left_sensor, right_sensor, front_sensor, velocity, angle = generate_default_system()
 
 angle_rules = FuzzyRules(np.array([
     Rule(np.array([left_sensor[0], front_sensor[0]]), angle[2]),
