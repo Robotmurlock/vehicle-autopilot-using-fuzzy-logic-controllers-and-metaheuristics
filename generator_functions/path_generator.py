@@ -6,6 +6,7 @@ import math
 
 import utils.convex_hull as ch 
 import utils.linear_transformations as lt
+from utils import constants
 
 def generate_convex_polygon(): 
     coords = []
@@ -35,7 +36,7 @@ def generate_sin_path():
     offset = 200
     num_of_points = 20
 
-    for i in range(game.SCREEN_WIDTH):
+    for i in range(constants.SCREEN_WIDTH):
         coords1.append((i, math.sin(0.01*i) * 200 + 250))
 
     coords2 = lt.apply_translation(0, offset, coords1)
