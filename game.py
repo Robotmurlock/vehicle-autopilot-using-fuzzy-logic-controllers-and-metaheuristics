@@ -22,13 +22,13 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
-        self.car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y)
+        self.car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
         self.path = path
         self.closed_polygon = closed_polygon
 
     def run(self, FSAngle, FSVelocity):
-        car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y)
+        car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
         iteration = 0
         last_position = None

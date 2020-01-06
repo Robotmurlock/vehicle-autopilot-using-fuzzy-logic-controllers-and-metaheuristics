@@ -125,7 +125,7 @@ def set_rules(left_sensor, front_sensor, right_sensor, angle, velocity):
 
     return angle_rules, velocity_rules
 
-def build_random_fuzzy_system(alpha):
+def build_random_fuzzy_system(alpha = 1):
     fuzzy_inputs = {}
     fuzzy_outputs = {}
     
