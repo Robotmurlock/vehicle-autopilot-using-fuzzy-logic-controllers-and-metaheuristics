@@ -29,6 +29,11 @@ class Chromosome:
     def __str__(self):
         return 'fitness: ' + str(self.fitness)
 
+    def save(self, filename):
+        file = open(filename, 'w')
+        file.write(str(self.FSAngle))
+        file.write(str(self.FSVelocity))
+
 def init_population(size):
     return np.array([Chromosome() for i in range(size)])
 
@@ -39,7 +44,7 @@ def get_best_chromosome(population):
             result = copy.deepcopy(chromosome)
     return result
 
-def create_group(population, group_size = 3):
+def create_group(population, group_size = 1):
     ids = random.sample(range(0, population.size), group_size)
     return population[ids]
 
@@ -69,25 +74,34 @@ def crossover(p1, p2):
                 
     return c1, c2
 
-def optimize(size = 10, max_iteration = 5):
+def mutate(c, mutation_rate = 0.05):
+    for i in range(c.FSAngle.inputs.size):
+        for j in range(c.FSAngle.inputs[i].inputs.size):
+            for k in range(c.FSAngle.inputs[i].inputs[j].size):
+                r = random.random()
+                if r < mutation_rate:
+                    c.FSAngle.inputs[i].inputs[j].points[k][0] = c.FSAngle.inputs[i].inputs[j].points[k][0] + random.randint(-2, 2)
+    return c
+                
+
+def optimize(size = 100, max_iteration = 100):
     population = init_population(size)
     for iteration in range(max_iteration):
+        print('current iteration: ' + iteration)
         new_population = []
         for i in range(size//2):
             p1 = select(population)
             p2 = select(population)
             c1, c2 = crossover(p1, p2)
+            c1 = mutate(c1)
+            c2 = mutate(c2)
             c1.update_fitness()
             c2.update_fitness()
             new_population.append(c1)
             new_population.append(c2)
         population = np.array(new_population)
-    print('DONE')
-    x = None
-    input(x)
     result = get_best_chromosome(population)
-    print(result)
-    result.update_fitness()
+    result.save('result.txt')
             
 
 if __name__ == '__main__':

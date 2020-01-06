@@ -1,6 +1,7 @@
 # Taken from: https://github.com/rasmaxim/pygame-car-tutorial
 import os
 import pygame
+from pygame.locals import *
 import random
 from math import sin, degrees
 from pygame.math import Vector2
@@ -18,7 +19,8 @@ class Game:
     def __init__(self, path, closed_polygon):
         pygame.init()
         pygame.display.set_caption("Trained car")
-        self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), DOUBLEBUF)
+        self.screen.set_alpha(False)
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False

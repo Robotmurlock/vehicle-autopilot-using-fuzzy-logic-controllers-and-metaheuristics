@@ -252,4 +252,14 @@ class FuzzySystem:
         self.output_info()
 
     def __str__(self):
-        return str([str(member) for member in self.inputs]) + '\n' + str(self.output)
+        out = ''
+        for member in self.inputs:
+            out = out + member.name + '\n'
+            for m in member:
+                out = out + '\t' + str(m)
+                out = out + '\n'
+
+        out = out + self.output.name + '\n'
+        for m in self.output:
+            out = out + '\t' + str(m) + '\n'
+        return out
