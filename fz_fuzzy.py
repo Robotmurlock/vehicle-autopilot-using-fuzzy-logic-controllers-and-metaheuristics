@@ -22,7 +22,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from fuzzy import fuzzy_generator
+import fz_fuzzy_generator
 
 from enum import Enum, unique
 @unique

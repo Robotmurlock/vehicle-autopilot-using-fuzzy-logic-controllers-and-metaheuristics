@@ -1,5 +1,5 @@
 import random
-from fuzzy import fuzzy
+import fz_fuzzy
 import numpy as np
 import math
 import sys

@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from fuzzy import fuzzy
+import fz_fuzzy as fuzzy
 
 ALL_FUZZY_FUNCS = {
     "left_sensor": {

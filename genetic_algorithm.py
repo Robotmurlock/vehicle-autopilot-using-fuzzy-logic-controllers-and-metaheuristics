@@ -1,4 +1,4 @@
-from fuzzy import fuzzy_generator
+import fz_fuzzy_generator
 from generator_functions import path_generator
 import game
 import numpy as np
@@ -14,7 +14,7 @@ def swap(a, b):
 
 class Chromosome:
     def __init__(self):
-        self.FSAngle, self.FSVelocity = fuzzy_generator.build_random_fuzzy_system()
+        self.FSAngle, self.FSVelocity = fz_fuzzy_generator.build_random_fuzzy_system()
         self.fitness = self.get_fitness()
 
     def get_fitness(self):

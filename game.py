@@ -9,7 +9,7 @@ import time
 import math
 import copy
 import sys
-from fuzzy import fuzzy_generator
+import fz_fuzzy_generator
 from generator_functions import path_generator
 import decoder
 from vehicle import vehicle
@@ -92,7 +92,7 @@ def simulate(path, is_closed, FSAngle, FSVelocity):
 if __name__ == '__main__':
     # path, is_closed = path_generator.generate_convex_polygon()
     path, is_closed = path_generator.generate_sin_path()
-    FSAngle, FSVelocity = fuzzy_generator.build_random_fuzzy_system()
+    FSAngle, FSVelocity = fz_fuzzy_generator.build_random_fuzzy_system()
 
     for i in range(0, 20):
         print(simulate(path, is_closed, FSAngle, FSVelocity))
