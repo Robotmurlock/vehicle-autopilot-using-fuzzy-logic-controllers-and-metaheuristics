@@ -92,7 +92,7 @@ def simulate(path, is_closed, FSAngle, FSVelocity):
 if __name__ == '__main__':
     # path, is_closed = path_generator.generate_convex_polygon()
     path, is_closed = path_generator.generate_sin_path()
-    FSAngle, FSVelocity = fuzzy_generator.build_random_fuzzy_system(1)
+    FSAngle, FSVelocity = fuzzy_generator.build_random_fuzzy_system()
 
     for i in range(0, 20):
         print(simulate(path, is_closed, FSAngle, FSVelocity))

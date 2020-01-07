@@ -116,7 +116,7 @@ def xy_split(xs, ys, size):
     
     return (xs_split, ys_split)
     
-def random_fuzzy(name, func_names, left, right, alpha, is_input = True):
+def random_fuzzy(name, func_names, left, right, is_input = True):
     size = len(func_names)
     number_of_points = 4*(size-1)
     
@@ -152,7 +152,7 @@ def set_rules(left_sensor, front_sensor, right_sensor, angle, velocity):
 
     return angle_rules, velocity_rules
 
-def build_random_fuzzy_system(alpha = 1):
+def build_random_fuzzy_system():
     fuzzy_inputs = {}
     fuzzy_outputs = {}
     
@@ -164,9 +164,9 @@ def build_random_fuzzy_system(alpha = 1):
         names = ALL_FUZZY_FUNCS[fuzzy_key]["mf_names"]
         
         if is_input:
-            fuzzy_inputs[name] = random_fuzzy(name, names, left, right, alpha, is_input)
+            fuzzy_inputs[name] = random_fuzzy(name, names, left, right, is_input)
         else:
-            fuzzy_outputs[name] = random_fuzzy(name, names, left, right, alpha, is_input)
+            fuzzy_outputs[name] = random_fuzzy(name, names, left, right, is_input)
           
     left_sensor = fuzzy_inputs["left_sensor"]
     front_sensor = fuzzy_inputs["front_sensor"]
