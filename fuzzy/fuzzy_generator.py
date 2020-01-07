@@ -41,8 +41,15 @@ ALL_FUZZY_FUNCS = {
 }
 
 def get_ys(size):
+    """
+    generate 10|0110|...|0110|01 sequence of ys
+    
+    len(10|0110|...|0110|01) = size
+    """
     ys = [1, 0]
     for i in range(2, size):
+        #? if we are on the edges of the 0110
+        #? here->0 110 or 011 0<-here
         if (i-2)%4 == 0 or (i-2)%4 == 3:
             ys.append(0)
         else:
@@ -50,25 +57,39 @@ def get_ys(size):
     return ys
 
 def get_xs(size, left, right):
+    """
+    Generates key points for trapezoidal functions.
+
+    Guarantees that there are no uncovered areas of the x-axis
+    """
     number_of_points = 4*(size-1)
+    #? split interval to parts within key_points represented by the key_points array 
     key_points = random.sample(range(left+1, right-1), size-1)
     key_points.append(left)
     key_points.append(right)
     key_points.sort()
 
     xs = []
+    #? left most figure (isn't a trapeziod)
     xs.append(key_points[0])
     xs.append(key_points[1])
 
     for i in range(1, size-1):
+        #? choose middle points for the trapezoid
         new_xs = random.sample(range(key_points[i]-1, key_points[i+1]+1), 2)
         new_xs.sort()
 
+        #? choose left-most edge so that is for sure 'leftest' point in the trapezoid 
         xs.append(random.randint(key_points[i-1]+1, key_points[i]))
+        
+        #? append middle points
         xs.append(new_xs[0])
         xs.append(new_xs[1])
+        
+        #? choose right-most edge so that is for sure 'rightest' point in the trapezoid
         xs.append(random.randint(key_points[i+1], key_points[i+2]-1))
-
+    
+    #? right most figure (isn't a trapeziod)
     xs.append(key_points[-2])
     xs.append(key_points[-1])
 
@@ -76,6 +97,10 @@ def get_xs(size, left, right):
     
 
 def xy_split(xs, ys, size):
+    """
+    Convert 10 0110... 01 to [ [1, 0], [0, 1, 1, 0], ... [0, 1]], same for x
+    """
+    #? first since it's only length of 2
     xs_split = [np.array([xs[0], xs[1]])]
     ys_split = [np.array([ys[0], ys[1]])]
     split_size = size-2
@@ -84,6 +109,8 @@ def xy_split(xs, ys, size):
         k = 4*i
         xs_split.append(np.array([xs[2+k], xs[3+k], xs[4+k], xs[5+k]]))
         ys_split.append(np.array([ys[2+k], ys[3+k], ys[4+k], ys[5+k]]))
+    
+    #? same as first since it's only length of 2
     xs_split.append(np.array([xs[-2], xs[-1]]))
     ys_split.append(np.array([ys[-2], ys[-1]]))
     
@@ -93,11 +120,11 @@ def random_fuzzy(name, func_names, left, right, alpha, is_input = True):
     size = len(func_names)
     number_of_points = 4*(size-1)
     
-    # generate_functions
-    xs = get_xs(size, left, right, )
+    #? generate_functions
+    xs = get_xs(size, left, right)
     ys = get_ys(number_of_points)
     
-    # build_single_fuzzy_io
+    #? build_single_fuzzy_io
     xs_split, ys_split = xy_split(xs, ys, size)
     if is_input:
         return fuzzy.FuzzyInput(name, np.array([fuzzy.MFInput(func_names[i], np.array(xs_split[i]), np.array(ys_split[i])) for i in range(size)])) 
@@ -152,3 +179,6 @@ def build_random_fuzzy_system(alpha = 1):
     FSAngle = fuzzy.FuzzySystem(np.array(list(fuzzy_inputs.values())), fuzzy_outputs["angle"], angle_rules)
     FSVelocity = fuzzy.FuzzySystem(np.array(list(fuzzy_inputs.values())), fuzzy_outputs["velocity"], velocity_rules) 
     return FSAngle, FSVelocity
+
+if __name__ == "__main__":
+    get_ys(2)
