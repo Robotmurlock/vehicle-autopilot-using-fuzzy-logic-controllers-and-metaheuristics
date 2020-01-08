@@ -1,17 +1,19 @@
 # Taken from: https://github.com/rasmaxim/pygame-car-tutorial
 import os
-import pygame
-from pygame.locals import *
 import random
-from math import sin, degrees
-from pygame.math import Vector2
 import time
 import math
 import copy
 import sys
+import numpy as np
+
+import pygame
+from pygame.locals import *
+from pygame.math import Vector2
+
 import fz_fuzzy_generator
-from generator_functions import path_generator
 import decoder
+from generator_functions import path_generator
 from vehicle import vehicle
 from utils import constants
 
@@ -24,6 +26,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
+        self.first_draw = True
         self.car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
         self.path = path
@@ -67,10 +70,16 @@ class Game:
         self.screen.fill(constants.SCREEN_COLOR)
         self.draw_path()
 
+        if self.first_draw:
+            self.save_display_matrix()
+            self.first_draw = False
+
         current_pixel_value = self.screen.get_at((int(self.car.center_position().x), int(self.car.center_position().y)))
         self.car.left_sensor_input, self.car.front_sensor_input, self.car.right_sensor_input = self.car.get_sensors(self.screen)
         self.screen.blit(rotated_car, self.car.position)
+        
         pygame.display.flip()
+        
         return current_pixel_value
 
     def draw_path(self):
@@ -83,6 +92,12 @@ class Game:
                 else:
                     draw_color = constants.SCREEN_COLOR
                 pygame.draw.polygon(self.screen, draw_color, polygon)
+
+    def save_display_matrix(self):
+        self.draw_path()
+        screen_matrix = pygame.surfarray.array_colorkey(self.screen)
+        np.savetxt('screen_matrix.txt', screen_matrix)
+        exit()
 
 def simulate(path, is_closed, FSAngle, FSVelocity):
     os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % constants.SCREEN_POSITION
