@@ -70,3 +70,8 @@ class Car:
 
     def is_collided(self, current_pixel_color):
         return current_pixel_color == constants.SCREEN_COLOR
+
+    def is_collided2(self, road_matrix):
+        return road_matrix[self.center_position[0], self.center_position[1]] == constants.OFFROAD
+
+        

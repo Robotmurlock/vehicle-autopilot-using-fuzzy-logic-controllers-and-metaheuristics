@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     print(all_values)
     print(to_be_saved.shape)
-    np.savetxt('screen_matrix.txt', to_be_saved)
+    np.savetxt(constants.ROAD_MATRIX_PATH, to_be_saved)
 
-    check_matrix = np.loadtxt('screen_matrix.txt')
+    check_matrix = np.loadtxt(constants.ROAD_MATRIX_PATH)
     print("check_matrix: ", check_matrix.shape)
