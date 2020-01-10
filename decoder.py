@@ -18,10 +18,6 @@ class Decoder:
         FSInput = np.array([left_sensor_input, front_sensor_input, right_sensor_input])
         self.FSAngle.fit(FSInput)
         self.FSVelocity.fit(FSInput)
-        #print("fuzzy:")
-        #print("\tinput" + str(FSInput))
-        #print("\tvelocity: " + str(fuzzy.FSVelocity.solution))
-        #print("\tangle: " + str(fuzzy.FSAngle.solution))
 
         ds = (self.FSVelocity.solution*5)
         drot = (self.FSAngle.solution)/180*math.pi + 0.000001

@@ -20,7 +20,7 @@ def run(FSAngle, FSVelocity):
 
 
     while not car.is_idle(iteration) and not car.is_collided2(road_matrix):
-        ds, drot = decoder.get_movement_param()
+        ds, drot = dec.get_movement_params()
         car.update(dt, ds, drot)
 
         iteration += 1 

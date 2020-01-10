@@ -4,6 +4,7 @@ import game
 import numpy as np
 import copy
 import random
+import simulation
 
 path, path_is_closed = path_generator.generate_sin_path()
 
@@ -18,8 +19,8 @@ class Chromosome:
         self.fitness = self.get_fitness()
 
     def get_fitness(self):
-        return game.simulate(path, path_is_closed, self.FSAngle, self.FSVelocity)
-
+        # return game.simulate(path, path_is_closed, self.FSAngle, self.FSVelocity)
+        return simulation.run(self.FSAngle, self.FSVelocity)
     def update_fitness(self):
         self.fitness = self.get_fitness()
 
@@ -34,8 +35,13 @@ class Chromosome:
         file.write(str(self.FSAngle))
         file.write(str(self.FSVelocity))
 
-def init_population(size):
-    return np.array([Chromosome() for i in range(size)])
+def init_population(size): 
+    population = []
+    for i in range(size):
+        print(i)
+        population.append(Chromosome())
+    return np.array(population)
+    # return np.array([Chromosome() for i in range(size)])
 
 def get_best_chromosome(population):
     result = None
@@ -84,10 +90,11 @@ def mutate(c, mutation_rate = 0.05):
     return c
                 
 
-def optimize(size = 100, max_iteration = 100):
+def optimize(size = 20, max_iteration = 100):
+    print("optimize...")
     population = init_population(size)
     for iteration in range(max_iteration):
-        print('current iteration: ' + iteration)
+        print('current iteration: ', iteration)
         new_population = []
         for i in range(size//2):
             p1 = select(population)
