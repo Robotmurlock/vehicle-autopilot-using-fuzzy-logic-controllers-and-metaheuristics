@@ -5,6 +5,10 @@ import numpy as np
 import copy
 import random
 import simulation
+from utils import load_path as lp
+from utils import constants
+import os
+from game import Game
 
 path, path_is_closed = path_generator.generate_sin_path()
 
@@ -13,14 +17,17 @@ def swap(a, b):
     a = b
     b = tmp
 
+ROAD_MATRIX = lp.load_path()
+
 class Chromosome:
     def __init__(self):
         self.FSAngle, self.FSVelocity = fz_fuzzy_generator.build_random_fuzzy_system()
         self.fitness = self.get_fitness()
+        
 
     def get_fitness(self):
         # return game.simulate(path, path_is_closed, self.FSAngle, self.FSVelocity)
-        return simulation.run(self.FSAngle, self.FSVelocity)
+        return simulation.run(self.FSAngle, self.FSVelocity, ROAD_MATRIX)
     def update_fitness(self):
         self.fitness = self.get_fitness()
 
@@ -90,9 +97,10 @@ def mutate(c, mutation_rate = 0.05):
     return c
                 
 
-def optimize(size = 20, max_iteration = 100):
+def optimize(size = 20, max_iteration = 10):
     print("optimize...")
     population = init_population(size)
+    
     for iteration in range(max_iteration):
         print('current iteration: ', iteration)
         new_population = []
@@ -109,7 +117,10 @@ def optimize(size = 20, max_iteration = 100):
         population = np.array(new_population)
     result = get_best_chromosome(population)
     result.save('result.txt')
-            
 
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % constants.SCREEN_POSITION
+    game = Game(path, path_is_closed)
+    game.run(result.FSAngle, result.FSVelocity)
+    
 if __name__ == '__main__':
     optimize()
