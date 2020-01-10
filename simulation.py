@@ -2,6 +2,7 @@ import numpy as np
 
 from vehicle import vehicle
 from utils import constants
+from utils import load_path as lp
 import decoder
 
 def run(FSAngle, FSVelocity):
@@ -15,7 +16,7 @@ def run(FSAngle, FSVelocity):
     dec = decoder.Decoder(FSAngle, FSVelocity, car)
     dt = 1e-2
 
-    road_matrix = np.loadtxt(constants.ROAD_MATRIX_PATH)
+    road_matrix = lp.load_path()
 
 
     while not car.is_idle(iteration) and not car.is_collided2(road_matrix):

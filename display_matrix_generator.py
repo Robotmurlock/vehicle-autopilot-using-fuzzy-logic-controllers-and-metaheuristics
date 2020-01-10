@@ -13,6 +13,7 @@ from pygame.math import Vector2
 
 from generator_functions import path_generator
 from utils import constants
+import utils.load_path as lp
 
 class Game:
     def __init__(self, path, closed_polygon):
@@ -83,7 +84,7 @@ if __name__ == '__main__':
 
     print(all_values)
     print(to_be_saved.shape)
-    np.savetxt(constants.ROAD_MATRIX_PATH, to_be_saved)
+    np.savetxt(constants.ROAD_MATRIX_PATH, to_be_saved.astype(int))
 
-    check_matrix = np.loadtxt(constants.ROAD_MATRIX_PATH)
-    print("check_matrix: ", check_matrix.shape)
+    check_matrix = lp.load_path()
+    print("check_matrix: ", check_matrix)
