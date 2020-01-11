@@ -6,6 +6,8 @@ from utils import load_path as lp
 import decoder
 
 TIME_STEP = 0.1
+MAX_ITERATIONS = 1_000
+MIN_DISTANCE = 50
 
 def get_sensors(car, road_matrix, memory):
     car_x = int(car.center_position().x)
@@ -24,6 +26,7 @@ def run(FSAngle, FSVelocity, road_matrix, memory):
     car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
     iteration = 0
+    past_pos = car.center_position()
 
     dec = decoder.Decoder(FSAngle, FSVelocity, car)
     dt = TIME_STEP
@@ -38,6 +41,15 @@ def run(FSAngle, FSVelocity, road_matrix, memory):
         car.update(dt, ds, drot)
         iteration += 1 
 
-    car_x, car_y = car.center_position()
-    #return vehicle.distance(car_x, car_y, constants.GOAL.x, constants.GOAL.y)
-    return 1/total_distance
+        if iteration % 100 == 0:
+            past_x, past_y = past_pos
+            curr_x, curr_y = car.center_position()
+            if vehicle.distance(past_x, past_y, curr_x, curr_y) < MIN_DISTANCE:
+                break
+            else:
+                past_pos = car.center_position()
+
+    if total_distance != 0:
+        return 1/total_distance
+    else:
+        return 0

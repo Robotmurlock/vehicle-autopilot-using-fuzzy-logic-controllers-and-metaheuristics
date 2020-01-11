@@ -18,9 +18,10 @@ def swap(a, b):
     b = tmp
 
 ROAD_MATRIX = lp.load_path()
-TOURNAMENT_SIZE = 10
-POPULATION_SIZE = 100
+TOURNAMENT_SIZE = 3
+POPULATION_SIZE = 10
 MAX_ITERATIONS = 10
+MUTATION_SPAN = 10
 
 memory = {}
 
@@ -31,8 +32,8 @@ class Chromosome:
         
 
     def get_fitness(self):
-        # return game.simulate(path, path_is_closed, self.FSAngle, self.FSVelocity)
         return simulation.run(self.FSAngle, self.FSVelocity, ROAD_MATRIX, memory)
+
     def update_fitness(self):
         self.fitness = self.get_fitness()
 
@@ -65,7 +66,7 @@ def create_group(population, group_size = TOURNAMENT_SIZE):
     return population[ids]
 
 def select(population):
-    # tournament selection
+    #? tournament selection
     group = create_group(population)
     result = group[0]
     for i in range(1, group.size):
@@ -96,7 +97,7 @@ def mutate(c, mutation_rate = 0.01):
             for k in range(c.FSAngle.inputs[i].inputs[j].size):
                 r = random.random()
                 if r < mutation_rate:
-                    c.FSAngle.inputs[i].inputs[j].points[k][0] = c.FSAngle.inputs[i].inputs[j].points[k][0] + random.randint(-2, 2)
+                    c.FSAngle.inputs[i].inputs[j].points[k][0] = c.FSAngle.inputs[i].inputs[j].points[k][0] + random.randint(-MUTATION_SPAN, MUTATION_SPAN)
     return c
                 
 def run_game(result):
@@ -125,6 +126,8 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS):
         population = np.array(new_population)
     result = get_best_chromosome(population)
     result.save('result.txt')
+
+    usr = input("Press any key to start the simulation")
 
     run_game(result)
 
