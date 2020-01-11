@@ -18,6 +18,9 @@ def swap(a, b):
     b = tmp
 
 ROAD_MATRIX = lp.load_path()
+TOURNAMENT_SIZE = 10
+POPULATION_SIZE = 3000
+MAX_ITERATIONS = 100
 
 class Chromosome:
     def __init__(self):
@@ -48,7 +51,6 @@ def init_population(size):
         print(i)
         population.append(Chromosome())
     return np.array(population)
-    # return np.array([Chromosome() for i in range(size)])
 
 def get_best_chromosome(population):
     result = None
@@ -57,7 +59,7 @@ def get_best_chromosome(population):
             result = copy.deepcopy(chromosome)
     return result
 
-def create_group(population, group_size = 1):
+def create_group(population, group_size = TOURNAMENT_SIZE):
     ids = random.sample(range(0, population.size), group_size)
     return population[ids]
 
@@ -96,8 +98,13 @@ def mutate(c, mutation_rate = 0.05):
                     c.FSAngle.inputs[i].inputs[j].points[k][0] = c.FSAngle.inputs[i].inputs[j].points[k][0] + random.randint(-2, 2)
     return c
                 
+def run_game(result):
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % constants.SCREEN_POSITION
+    game = Game(path, path_is_closed)
+    game.run(result.FSAngle, result.FSVelocity)
 
-def optimize(size = 20, max_iteration = 100):
+
+def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS):
     print("optimize...")
     population = init_population(size)
     
@@ -118,9 +125,7 @@ def optimize(size = 20, max_iteration = 100):
     result = get_best_chromosome(population)
     result.save('result.txt')
 
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % constants.SCREEN_POSITION
-    game = Game(path, path_is_closed)
-    game.run(result.FSAngle, result.FSVelocity)
-    
+    run_game(result)
+
 if __name__ == '__main__':
     optimize()
