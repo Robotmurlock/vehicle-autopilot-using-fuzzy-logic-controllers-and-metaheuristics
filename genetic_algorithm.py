@@ -22,6 +22,8 @@ TOURNAMENT_SIZE = 10
 POPULATION_SIZE = 100
 MAX_ITERATIONS = 10
 
+memory = {}
+
 class Chromosome:
     def __init__(self):
         self.FSAngle, self.FSVelocity = fz_fuzzy_generator.build_random_fuzzy_system()
@@ -30,7 +32,7 @@ class Chromosome:
 
     def get_fitness(self):
         # return game.simulate(path, path_is_closed, self.FSAngle, self.FSVelocity)
-        return simulation.run(self.FSAngle, self.FSVelocity, ROAD_MATRIX)
+        return simulation.run(self.FSAngle, self.FSVelocity, ROAD_MATRIX, memory)
     def update_fitness(self):
         self.fitness = self.get_fitness()
 
@@ -121,8 +123,6 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS):
             new_population.append(c1)
             new_population.append(c2)
         population = np.array(new_population)
-
-        run_game(get_best_chromosome(population))
     result = get_best_chromosome(population)
     result.save('result.txt')
 

@@ -5,10 +5,19 @@ from utils import constants
 from utils import load_path as lp
 import decoder
 
-MAX_ITERATIONS = 10_000
 TIME_STEP = 0.1
 
-def run(FSAngle, FSVelocity, road_matrix):
+def get_sensors(car, road_matrix, memory):
+    car_x = int(car.center_position().x)
+    car_y = int(car.center_position().y)
+    angle = int(car.angle)
+    if (car_x, car_y, angle) in memory:
+        return memory[(car_x, car_y, angle)]
+    left, front, right = car.get_sensors2(road_matrix)
+    memory[(car_x, car_y, angle)] = (left, front, right)
+    return left, front, right
+
+def run(FSAngle, FSVelocity, road_matrix, memory):
     """
     Runs a single simulation, movement params are calculated based on the fuzzy systems FSAngle and FSVelocity
     """
@@ -22,7 +31,8 @@ def run(FSAngle, FSVelocity, road_matrix):
     total_distance = 0
 
     while not car.is_idle(iteration) and not car.is_collided2(road_matrix) and iteration <= MAX_ITERATIONS:
-        car.left_sensor_input, car.front_sensor_input, car.right_sensor_input = car.get_sensors2(road_matrix)
+        
+        car.left_sensor_input, car.front_sensor_input, car.right_sensor_input = get_sensors(car, road_matrix, memory)
         ds, drot = dec.get_movement_params()
         total_distance += ds
         car.update(dt, ds, drot)
