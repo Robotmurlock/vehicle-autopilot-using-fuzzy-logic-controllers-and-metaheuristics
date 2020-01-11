@@ -97,7 +97,7 @@ def mutate(c, mutation_rate = 0.05):
     return c
                 
 
-def optimize(size = 20, max_iteration = 10):
+def optimize(size = 20, max_iteration = 100):
     print("optimize...")
     population = init_population(size)
     

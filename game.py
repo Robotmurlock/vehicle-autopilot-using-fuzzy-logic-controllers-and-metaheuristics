@@ -35,7 +35,6 @@ class Game:
         car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
         iteration = 0
-        last_position = None
         dec = decoder.Decoder(FSAngle, FSVelocity, self.car)
 
         while not self.exit:
