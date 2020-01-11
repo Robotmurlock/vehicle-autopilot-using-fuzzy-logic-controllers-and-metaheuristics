@@ -60,6 +60,25 @@ class Car:
         right_sensor_input = self.sensor('right', screen, -math.pi/2)
         return (left_sensor_input, front_sensor_input, right_sensor_input)
 
+    def sensor2(self, name, matrix, angle_direction):
+        angle = -self.angle/180*math.pi
+        pos_x = self.center_position().x
+        pos_y = self.center_position().y
+        z = 0
+        while(valid_position(int(pos_x), int(pos_y)) and matrix[int(pos_x)][int(pos_y)] != constants.OFFROAD):
+            z = z + 1
+            pos_x = self.center_position().x + z*math.cos(angle - angle_direction)
+            pos_y = self.center_position().y + z*math.sin(angle - angle_direction)
+            
+        sensor_input = str(distance(self.center_position().x, self.center_position().y, pos_x, pos_y))
+        return sensor_input
+
+    def get_sensors2(self, matrix):
+        front_sensor_input = self.sensor2('front', matrix, 0)
+        left_sensor_input = self.sensor2('left', matrix, math.pi/2)
+        right_sensor_input = self.sensor2('right', matrix, -math.pi/2)
+        return (left_sensor_input, front_sensor_input, right_sensor_input)
+
     def is_idle(self, iteration):
         result = False
         if self.last_position == self.center_position():

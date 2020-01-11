@@ -19,8 +19,8 @@ def swap(a, b):
 
 ROAD_MATRIX = lp.load_path()
 TOURNAMENT_SIZE = 10
-POPULATION_SIZE = 3000
-MAX_ITERATIONS = 100
+POPULATION_SIZE = 100
+MAX_ITERATIONS = 10
 
 class Chromosome:
     def __init__(self):
@@ -48,7 +48,6 @@ class Chromosome:
 def init_population(size): 
     population = []
     for i in range(size):
-        print(i)
         population.append(Chromosome())
     return np.array(population)
 
@@ -89,7 +88,7 @@ def crossover(p1, p2):
                 
     return c1, c2
 
-def mutate(c, mutation_rate = 0.05):
+def mutate(c, mutation_rate = 0.01):
     for i in range(c.FSAngle.inputs.size):
         for j in range(c.FSAngle.inputs[i].inputs.size):
             for k in range(c.FSAngle.inputs[i].inputs[j].size):
@@ -122,6 +121,8 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS):
             new_population.append(c1)
             new_population.append(c2)
         population = np.array(new_population)
+
+        run_game(get_best_chromosome(population))
     result = get_best_chromosome(population)
     result.save('result.txt')
 
