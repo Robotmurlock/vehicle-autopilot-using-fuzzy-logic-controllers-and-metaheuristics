@@ -9,14 +9,15 @@ from utils import constants, path_generator
 import os
 from game import Game
 
-path, path_is_closed = None, None#= path_generator.generate_sin_path()
+path = None
+path_is_closed = None
+ROAD_MATRIX = None
 
 def swap(a, b):
     tmp = a
     a = b
     b = tmp
 
-ROAD_MATRIX = None
 TOURNAMENT_SIZE = 5
 POPULATION_SIZE = 50
 MAX_ITERATIONS = 20
@@ -106,15 +107,21 @@ def run_game(result):
 
 
 def load_initial_params(is_sin_path):
-    path_is_closed = False
-    path, ROAD_MATRIX = lp.load_sin_params()
+    if is_sin_path:
+        path_is_closed = False
+        path, ROAD_MATRIX = lp.load_sin_params()
+    else:
+        path_is_closed = True
+        path, ROAD_MATRIX = lp.load_convex_params()
 
     return path, path_is_closed, ROAD_MATRIX
 
 def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS):
     print("optimize...")
+    
     print("ROAD_MATRIX:", ROAD_MATRIX.shape)
     print("PATH_MATRIX:", np.array(path).shape)
+    
     population = init_population(size)
     
     for iteration in range(max_iteration):
@@ -139,5 +146,5 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS):
     run_game(result)
 
 if __name__ == '__main__':
-    path, path_is_closed, ROAD_MATRIX = load_initial_params(True)
+    path, path_is_closed, ROAD_MATRIX = load_initial_params(constants.USE_CONVEX_POLYGON)
     optimize()

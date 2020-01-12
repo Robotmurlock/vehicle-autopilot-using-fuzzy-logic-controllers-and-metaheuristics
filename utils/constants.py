@@ -3,7 +3,6 @@ import math
 
 IMAGE_DIR = "img"
 IMAGE_NAME = "car.png"
-ROAD_MATRIX_PATH = "screen_matrix.txt"
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -21,11 +20,12 @@ GOAL = Vector2(SCREEN_WIDTH-10, SCREEN_HEIGHT/2)
 
 OFFROAD = 0
 
-
 MATRICES_DIR = "matrices"
 PATH_MATRIX_SIN = "path_matrix_sin.pickle"
 SCREEN_MATRIX_SIN = "screen_matrix_sin.txt"
 
 PATH_MATRIX_CONVEX = "path_matrix_convex.pickle"
-
 SCREEN_MATRIX_CONVEX = "screen_matrix_convex.txt"
+
+USE_CONVEX_POLYGON = False
+USE_SIN_POLYGON = True
