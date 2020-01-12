@@ -20,3 +20,11 @@ SCREEN_COLOR = (100, 100, 100, 255)
 GOAL = Vector2(SCREEN_WIDTH-10, SCREEN_HEIGHT/2)
 
 OFFROAD = 0
+
+
+MATRICES_DIR = "matrices"
+PATH_MATRIX_SIN = "path_matrix_sin.txt"
+SCREEN_MATRIX_SIN = "screen_matrix_sin.txt"
+
+PATH_MATRIX_CONVEX = "path_matrix_convex.txt"
+SCREEN_MATRIX_CONVEX = "screen_matrix_convex.txt"

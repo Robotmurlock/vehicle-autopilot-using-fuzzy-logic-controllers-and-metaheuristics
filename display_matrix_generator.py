@@ -17,48 +17,23 @@ import utils.load_path as lp
 class Game:
     def __init__(self, path, closed_polygon):
         pygame.init()
-        pygame.display.set_caption("Trained car")
         self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), DOUBLEBUF)
         self.screen.set_alpha(False)
-        self.clock = pygame.time.Clock()
-        self.ticks = 60
-        self.exit = False
         self.path = path
         self.closed_polygon = closed_polygon
 
         self.screen_matrix = None
-        self.is_screen_saved = False
 
     def run(self):
-        while not self.exit:
-            dt = self.clock.get_time() / 1000
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.exit = True
-
-            self.draw_screen()        
-            self.clock.tick(self.ticks)
-
-            if self.is_screen_saved:
-                break
-
+        self.draw_screen()        
         pygame.quit()
         return self.screen_matrix
 
     def draw_screen(self):
         self.screen.fill(constants.SCREEN_COLOR)
-        
         self.draw_path()
-        self.save_display_matrix()
-
-        pygame.display.flip()
-    
-    def save_display_matrix(self):
         self.screen_matrix = pygame.surfarray.pixels_red(self.screen).astype(int)
-        self.is_screen_saved = True
-        
-
+    
     def draw_path(self):
         if not self.closed_polygon:
             pygame.draw.polygon(self.screen, constants.PATH_COLOR, self.path)
@@ -70,10 +45,8 @@ class Game:
                     draw_color = constants.SCREEN_COLOR
                 pygame.draw.polygon(self.screen, draw_color, polygon)
 
-if __name__ == '__main__':
-    # path, is_closed = path_generator.generate_convex_polygon()
-    path, is_closed = path_generator.generate_sin_path()
-
+def save_matrix(path, is_closed):
+    
     screen_matrix = Game(path, is_closed).run().flatten()
     #? compare R values of the RGB
     screen_matrix[screen_matrix == constants.PATH_COLOR[0]] = 1 
@@ -81,9 +54,14 @@ if __name__ == '__main__':
     to_be_saved = np.reshape(screen_matrix, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
     all_values = []
 
-    print(all_values)
     print(to_be_saved.shape)
     np.savetxt(constants.ROAD_MATRIX_PATH, to_be_saved.astype(int))
 
     check_matrix = lp.load_path()
-    print("check_matrix: ", check_matrix)
+    print("matrix has ones: ", 1 in check_matrix)
+
+if __name__ == '__main__':
+    # path, is_closed = path_generator.generate_convex_polygon()
+    path, is_closed = path_generator.generate_sin_path()
+    
+    save_matrix(path, is_closed)
