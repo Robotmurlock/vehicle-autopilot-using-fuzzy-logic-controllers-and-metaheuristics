@@ -11,8 +11,7 @@ import pygame
 from pygame.locals import *
 from pygame.math import Vector2
 
-from generator_functions import path_generator
-from utils import constants
+from utils import constants, path_generator
 import utils.load_path as lp
 
 class Game:

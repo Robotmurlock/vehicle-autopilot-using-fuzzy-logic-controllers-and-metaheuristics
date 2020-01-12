@@ -13,9 +13,8 @@ from pygame.math import Vector2
 
 import fz_fuzzy_generator
 import decoder
-from generator_functions import path_generator
 from vehicle import vehicle
-from utils import constants
+from utils import constants, path_generator
 
 class Game:
     def __init__(self, path, closed_polygon):
@@ -93,9 +92,8 @@ def simulate(path, is_closed, FSAngle, FSVelocity):
     return(game.run(FSAngle, FSVelocity))
 
 if __name__ == '__main__':
-    # path, is_closed = path_generator.generate_convex_polygon()
-    path, is_closed = path_generator.generate_sin_path()
+    path, is_closed = path_generator.generate_convex_polygon()
+    # path, is_closed = path_generator.generate_sin_path()
 
-    for i in range(0, 20):
-        FSAngle, FSVelocity = fz_fuzzy_generator.build_random_fuzzy_system()
-        print(simulate(path, is_closed, FSAngle, FSVelocity))
+    FSAngle, FSVelocity = fz_fuzzy_generator.build_random_fuzzy_system()
+    simulate(path, is_closed, FSAngle, FSVelocity)

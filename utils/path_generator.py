@@ -1,7 +1,5 @@
 import random
 import numpy as np
-
-import game
 import math
 
 import utils.convex_hull as ch 
@@ -13,8 +11,8 @@ def generate_convex_polygon():
     num_of_points = 20
     
     for i in range (num_of_points):
-        x = random.randrange(game.SCREEN_WIDTH)
-        y = random.randrange(game.SCREEN_HEIGHT)
+        x = random.randrange(constants.SCREEN_WIDTH)
+        y = random.randrange(constants.SCREEN_HEIGHT)
         coords.append((x, y))
 
     coords1 = ch.gift_wrap(coords)

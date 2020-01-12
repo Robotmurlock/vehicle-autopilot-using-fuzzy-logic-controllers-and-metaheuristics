@@ -6,7 +6,7 @@ from utils import load_path as lp
 import decoder
 
 TIME_STEP = 0.1
-MAX_ITERATIONS = 10000
+MAX_ITERATIONS = 500
 MIN_DISTANCE = 50
 
 def get_sensors(car, road_matrix, memory):

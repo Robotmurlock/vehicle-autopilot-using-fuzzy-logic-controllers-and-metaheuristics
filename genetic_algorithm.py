@@ -1,12 +1,11 @@
 import fz_fuzzy_generator
-from generator_functions import path_generator
 import game
 import numpy as np
 import copy
 import random
 import simulation
 from utils import load_path as lp
-from utils import constants
+from utils import constants, path_generator
 import os
 from game import Game
 
