@@ -6,7 +6,6 @@ import os
 def load_sin_params():
     
     current_dir = os.path.dirname(os.curdir)
-    print("par_dir", os.path.abspath(os.curdir))
     path_matrix_path = os.path.join(current_dir, constants.MATRICES_DIR, constants.PATH_MATRIX_SIN)
     screen_matrix_path = os.path.join(current_dir, constants.MATRICES_DIR, constants.SCREEN_MATRIX_SIN)
 
@@ -19,7 +18,6 @@ def load_sin_params():
 
 def load_convex_params():    
     current_dir = os.path.dirname(os.curdir)
-    print("par_dir", os.path.abspath(os.curdir))
     path_matrix_path = os.path.join(current_dir, constants.MATRICES_DIR, constants.PATH_MATRIX_CONVEX)
     screen_matrix_path = os.path.join(current_dir, constants.MATRICES_DIR, constants.SCREEN_MATRIX_CONVEX)
 

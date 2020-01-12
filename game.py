@@ -15,6 +15,8 @@ import fz_fuzzy_generator
 import decoder
 from vehicle import vehicle
 from utils import constants, path_generator
+import pickle 
+
 
 class Game:
     def __init__(self, path, closed_polygon):
@@ -92,8 +94,18 @@ def simulate(path, is_closed, FSAngle, FSVelocity):
     return(game.run(FSAngle, FSVelocity))
 
 if __name__ == '__main__':
+    """
+    Set up game with pretrained fuzzy system
+    """
     path, is_closed = path_generator.generate_convex_polygon()
     # path, is_closed = path_generator.generate_sin_path()
 
-    FSAngle, FSVelocity = fz_fuzzy_generator.build_random_fuzzy_system()
+
+    with open(constants.PRETRAINED_FUZZY_PATH, 'rb') as f:
+        fz = pickle.load(f)
+    
+    FSAngle, FSVelocity = fz
+    print(FSAngle)
+    print(FSVelocity)
+
     simulate(path, is_closed, FSAngle, FSVelocity)

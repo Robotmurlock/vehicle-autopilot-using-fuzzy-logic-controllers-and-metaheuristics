@@ -8,6 +8,7 @@ from utils import load_path as lp
 from utils import constants, path_generator
 import os
 from game import Game
+import pickle
 
 path = None
 path_is_closed = None
@@ -44,9 +45,12 @@ class Chromosome:
         return 'fitness: ' + str(self.fitness)
 
     def save(self, filename):
-        file = open(filename, 'w')
-        file.write(str(self.FSAngle))
-        file.write(str(self.FSVelocity))
+        with open(filename, 'w') as f:
+            f.write(str(self.FSAngle))
+            f.write(str(self.FSVelocity))
+
+        with open(constants.PRETRAINED_FUZZY_PATH, 'wb') as f:
+            pickle.dump([self.FSAngle, self.FSVelocity], f)
 
 def init_population(size): 
     population = []
