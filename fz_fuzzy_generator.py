@@ -6,14 +6,14 @@ ALL_FUZZY_FUNCS = {
     "left_sensor": {
         "name": "left_sensor",
         "left_boundary": 0,
-        "right_boundary": 100,
+        "right_boundary": 50,
         "mf_names": ["close", "midrange", "far", "very_far"],
         "is_input": True,
     },
     "right_sensor": {
         "name": "right_sensor",
         "left_boundary": 0,
-        "right_boundary": 100,
+        "right_boundary": 50,
         "mf_names": ["close", "midrange", "far", "very_far"],
         "is_input": True,
     },
@@ -185,6 +185,10 @@ def set_rules(left_sensor, front_sensor, right_sensor, f_angle, f_velocity):
         fuzzy.Rule(np.array([left["midrange"], right["very far"]]), angle["hard right"]),
         fuzzy.Rule(np.array([left["far"], right["close"]]), angle["left"]),
         fuzzy.Rule(np.array([left["close"], right["far"]]), angle["right"]),
+
+        fuzzy.Rule(np.array([left["midrange"], right["midrange"]]), angle["forward"]),
+        fuzzy.Rule(np.array([left["close"]]), angle["hard right"]),
+        fuzzy.Rule(np.array([right["close"]]), angle["hard left"]),
     ]))
 
     velocity_rules = fuzzy.FuzzyRules(np.array([

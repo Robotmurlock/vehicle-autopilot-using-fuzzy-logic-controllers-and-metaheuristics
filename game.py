@@ -35,7 +35,7 @@ class Game:
         car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
         iteration = 0
-        dec = decoder.Decoder(FSAngle, FSVelocity, self.car)
+        dec = decoder.Decoder(FSAngle, FSVelocity, self.car, True)
 
         while not self.exit:
             dt = self.clock.get_time() / 1000
