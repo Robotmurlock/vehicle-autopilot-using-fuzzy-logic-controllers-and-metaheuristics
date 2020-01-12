@@ -6,6 +6,7 @@ import math
 import copy
 import sys
 import numpy as np
+import pickle
 
 import pygame
 from pygame.locals import *
@@ -52,16 +53,40 @@ def save_matrix(path, is_closed):
     screen_matrix[screen_matrix == constants.PATH_COLOR[0]] = 1 
     screen_matrix[screen_matrix == constants.SCREEN_COLOR[0]] = 0
     to_be_saved = np.reshape(screen_matrix, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
-    all_values = []
 
-    print(to_be_saved.shape)
-    np.savetxt(constants.ROAD_MATRIX_PATH, to_be_saved.astype(int))
+    
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    if is_closed:
+        path_matrix_to_be_saved = constants.PATH_MATRIX_CONVEX
+        screen_matrix_to_be_saved = constants.SCREEN_MATRIX_CONVEX
+    else:
+        path_matrix_to_be_saved = constants.PATH_MATRIX_SIN
+        screen_matrix_to_be_saved = constants.SCREEN_MATRIX_SIN
 
-    check_matrix = lp.load_path()
-    print("matrix has ones: ", 1 in check_matrix)
+    path_matrix_path = os.path.join(current_dir, constants.MATRICES_DIR, path_matrix_to_be_saved)
+    screen_matrix_path = os.path.join(current_dir, constants.MATRICES_DIR, screen_matrix_to_be_saved)
+    
+    print("PATH_MATRIX", np.array(path).shape)
+    print("saving path matrix...")
+    with open(path_matrix_path, 'wb') as f:
+        pickle.dump(path, f)
+    
+    print("saving screen matrix...")
+    print("SCREEN_MATRIX", to_be_saved.shape)
+    np.savetxt(screen_matrix_path, to_be_saved)
+
+
+    with open(path_matrix_path, 'rb') as f:
+        test = pickle.load(f)
 
 if __name__ == '__main__':
-    # path, is_closed = path_generator.generate_convex_polygon()
-    path, is_closed = path_generator.generate_sin_path()
-    
+    path, is_closed = path_generator.generate_convex_polygon()
+    print("saving convex polygon...")
     save_matrix(path, is_closed)
+    
+    path, is_closed = path_generator.generate_sin_path()
+    print("saving sin path...")
+    save_matrix(path, is_closed)
+
+    
+    

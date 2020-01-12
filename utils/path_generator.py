@@ -7,6 +7,7 @@ import utils.linear_transformations as lt
 from utils import constants
 
 def generate_convex_polygon(): 
+    #? Guarantees that we will have car in our convex polygon
     coords = [(constants.CAR_POS_X, constants.CAR_POS_Y + 10)]
     num_of_points = 20
     

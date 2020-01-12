@@ -23,8 +23,9 @@ OFFROAD = 0
 
 
 MATRICES_DIR = "matrices"
-PATH_MATRIX_SIN = "path_matrix_sin.txt"
+PATH_MATRIX_SIN = "path_matrix_sin.pickle"
 SCREEN_MATRIX_SIN = "screen_matrix_sin.txt"
 
-PATH_MATRIX_CONVEX = "path_matrix_convex.txt"
+PATH_MATRIX_CONVEX = "path_matrix_convex.pickle"
+
 SCREEN_MATRIX_CONVEX = "screen_matrix_convex.txt"
