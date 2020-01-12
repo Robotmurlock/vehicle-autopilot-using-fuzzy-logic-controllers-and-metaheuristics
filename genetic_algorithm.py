@@ -91,7 +91,7 @@ def crossover(p1, p2):
                 
     return c1, c2
 
-def mutate(c, mutation_rate = 0.01):
+def mutate(c, mutation_rate = 0.00):
     for i in range(c.FSAngle.inputs.size):
         for j in range(c.FSAngle.inputs[i].inputs.size):
             for k in range(c.FSAngle.inputs[i].inputs[j].size):

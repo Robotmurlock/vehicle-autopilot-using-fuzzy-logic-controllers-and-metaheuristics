@@ -131,23 +131,67 @@ def random_fuzzy(name, func_names, left, right, is_input = True):
     else:
         return fuzzy.FuzzyOutput(name, np.array([fuzzy.MFOutput(func_names[i], np.array(xs_split[i]), np.array(ys_split[i])) for i in range(size)])) 
 
-def set_rules(left_sensor, front_sensor, right_sensor, angle, velocity):
+def set_rules(left_sensor, front_sensor, right_sensor, f_angle, f_velocity):
+    left = {
+        "close"    : left_sensor[0],
+        "midrange" : left_sensor[1],
+        "far"      : left_sensor[2],
+        "very far" : left_sensor[3]
+    }
+
+    right = {
+        "close"    : right_sensor[0],
+        "midrange" : right_sensor[1],
+        "far"      : right_sensor[2],
+        "very far" : right_sensor[3]
+    }
+
+    front = {
+        "close"    : front_sensor[0],
+        "midrange" : front_sensor[1],
+        "far"      : front_sensor[2],
+        "very far" : front_sensor[3]
+    }
+
+    velocity = {
+        "low"       : f_velocity[0],
+        "middle"    : f_velocity[1],
+        "high"      : f_velocity[2],
+        "very high" : f_velocity[3]
+    }
+
+    angle = {
+        "hard right" : f_angle[0],
+        "right"      : f_angle[1],
+        "forward"    : f_angle[2],
+        "left"       : f_angle[3],
+        "hard left"  : f_angle[4]
+    }
+
     angle_rules = fuzzy.FuzzyRules(np.array([
-        fuzzy.Rule(np.array([left_sensor[0], front_sensor[0]]), angle[4]),
-        fuzzy.Rule(np.array([right_sensor[0], front_sensor[0]]), angle[0]),
-        fuzzy.Rule(np.array([front_sensor[1], left_sensor[1]]), angle[3]),
-        fuzzy.Rule(np.array([front_sensor[1], right_sensor[1]]), angle[1]),
-        fuzzy.Rule(np.array([front_sensor[0], left_sensor[3]]), angle[0]),
-        fuzzy.Rule(np.array([front_sensor[0], right_sensor[3]]), angle[4]),
-        fuzzy.Rule(np.array([left_sensor[0], right_sensor[1]]), angle[3]),
-        fuzzy.Rule(np.array([left_sensor[1], right_sensor[0]]), angle[1])
+        fuzzy.Rule(np.array([left["close"], right["midrange"]]), angle["hard right"]),
+        fuzzy.Rule(np.array([left["midrange"], right["close"]]), angle["hard left"]),
+        fuzzy.Rule(np.array([left["close"], right["far"]]), angle["hard right"]),
+        fuzzy.Rule(np.array([left["far"], right["close"]]), angle["hard left"]),
+
+        fuzzy.Rule(np.array([left["close"], front["close"]]), angle["hard right"]),
+        fuzzy.Rule(np.array([right["close"], front["close"]]), angle["hard left"]),
+        fuzzy.Rule(np.array([left["close"], front["midrange"]]), angle["right"]),
+        fuzzy.Rule(np.array([right["close"], front["midrange"]]), angle["left"]),
+
+        fuzzy.Rule(np.array([left["far"], right["midrange"]]), angle["hard left"]),
+        fuzzy.Rule(np.array([left["midrange"], right["far"]]), angle["hard right"]),
+        fuzzy.Rule(np.array([left["very far"], right["midrange"]]), angle["hard left"]),
+        fuzzy.Rule(np.array([left["midrange"], right["very far"]]), angle["hard right"]),
+        fuzzy.Rule(np.array([left["far"], right["close"]]), angle["left"]),
+        fuzzy.Rule(np.array([left["close"], right["far"]]), angle["right"]),
     ]))
 
     velocity_rules = fuzzy.FuzzyRules(np.array([
-        fuzzy.Rule(np.array([front_sensor[3]]), velocity[3]),
-        fuzzy.Rule(np.array([front_sensor[2]]), velocity[2]),
-        fuzzy.Rule(np.array([front_sensor[1]]), velocity[1]),
-        fuzzy.Rule(np.array([front_sensor[0]]), velocity[0])
+        fuzzy.Rule(np.array([front["close"]]), velocity["low"]),
+        fuzzy.Rule(np.array([front["midrange"]]), velocity["middle"]),
+        fuzzy.Rule(np.array([front["far"]]), velocity["high"]),
+        fuzzy.Rule(np.array([front["very far"]]), velocity["very high"])
     ]))
 
     return angle_rules, velocity_rules

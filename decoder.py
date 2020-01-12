@@ -20,6 +20,6 @@ class Decoder:
         self.FSVelocity.fit(FSInput)
 
         ds = (self.FSVelocity.solution*5)
-        drot = (self.FSAngle.solution)/180*math.pi + 0.000001
+        drot = (-self.FSAngle.solution)/180*math.pi + 0.000001
 
         return (ds, drot)
