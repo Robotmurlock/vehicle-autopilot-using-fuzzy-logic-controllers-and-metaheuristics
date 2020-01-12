@@ -16,7 +16,7 @@ class Decoder:
         front_sensor_input = float(self.car.front_sensor_input)/5
         right_sensor_input = float(self.car.right_sensor_input)/7
 
-        FSInput = np.array([left_sensor_input, front_sensor_input, right_sensor_input])
+        FSInput = np.array([left_sensor_input, right_sensor_input, front_sensor_input])
         self.FSAngle.fit(FSInput)
         self.FSVelocity.fit(FSInput)
 
