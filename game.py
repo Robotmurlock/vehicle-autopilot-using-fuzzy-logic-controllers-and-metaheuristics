@@ -6,6 +6,7 @@ import math
 import copy
 import sys
 import numpy as np
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import pygame
 from pygame.locals import *
@@ -36,7 +37,7 @@ class Game:
         car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
         iteration = 0
-        dec = decoder.Decoder(FSAngle, FSVelocity, self.car, False)
+        dec = decoder.Decoder(FSAngle, FSVelocity, self.car, True)
 
         while not self.exit:
             dt = self.clock.get_time() / 1000

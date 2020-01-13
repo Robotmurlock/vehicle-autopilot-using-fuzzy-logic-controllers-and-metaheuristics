@@ -32,14 +32,18 @@ def run(FSAngle, FSVelocity, road_matrix, memory):
     dt = TIME_STEP
 
     total_distance = 0
+    punishment = 0
+    left_right = 0
 
-    while not car.is_idle(iteration) and not car.is_collided2(road_matrix) and iteration <= MAX_ITERATIONS:
+    while iteration <= MAX_ITERATIONS:
         
         car.left_sensor_input, car.front_sensor_input, car.right_sensor_input = get_sensors(car, road_matrix, memory)
         ds, drot = dec.get_movement_params()
-        total_distance += ds
         car.update(dt, ds, drot)
+
         iteration += 1 
+        total_distance += ds
+        left_right += abs(float(car.left_sensor_input) - float(car.right_sensor_input))
 
         if iteration % 100 == 0:
             past_x, past_y = past_pos
@@ -49,7 +53,12 @@ def run(FSAngle, FSVelocity, road_matrix, memory):
             else:
                 past_pos = car.center_position()
 
+        if car.is_idle(iteration) or car.is_collided2(road_matrix):
+            punishment = 125
+            break
+
+    #print(left_right/iteration + punishment)
     if total_distance != 0:
-        return 1/total_distance
+        return left_right/iteration + punishment
     else:
         return 0

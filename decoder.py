@@ -3,6 +3,10 @@ import fz_fuzzy
 import numpy as np
 import math
 import sys
+import os
+import subprocess as sp
+
+clear = lambda: os.system('clear')
 
 class Decoder:
     def __init__(self, FSAngle, FSVelocity, car, debug = False):
@@ -13,7 +17,7 @@ class Decoder:
 
     def get_movement_params(self):
         left_sensor_input = float(self.car.left_sensor_input)/7
-        front_sensor_input = float(self.car.front_sensor_input)/5
+        front_sensor_input = float(self.car.front_sensor_input)/7
         right_sensor_input = float(self.car.right_sensor_input)/7
 
         FSInput = np.array([left_sensor_input, right_sensor_input, front_sensor_input])
@@ -24,6 +28,8 @@ class Decoder:
         drot = (self.FSAngle.solution)/180*math.pi + 0.000001
 
         if(self.debug):
+            time.slee
+            clear()
             print('left: ' + str(left_sensor_input))
             print('right: ' + str(right_sensor_input))
             print('front: ' + str(front_sensor_input))
@@ -31,12 +37,13 @@ class Decoder:
             for x in self.FSAngle.inputs:
                 print(x.name)
                 for y in x.inputs:
-                    print('\t' + ("%1.2f" % y.mi) + ' | ' + str(y))
+                    print('\t' + ("%1.2f" % y.mi) + ' | ' + ("%10s" % y.name) + ' | ' + str(y))
 
             print(self.FSAngle.output.name)
             for y in self.FSAngle.output:
-                print('\t' + ("%1.2f" % y.mi) + ' | ' + str(y))
+                print('\t' + ("%1.2f" % y.mi) + ' | ' + ("%10s" % y.name) + ' | ' + str(y))
 
-            print('angle solution:' + str(self.FSAngle.solution))
+            print('angle solution: ' + str(self.FSAngle.solution))
+            print()
 
         return (ds, drot)
