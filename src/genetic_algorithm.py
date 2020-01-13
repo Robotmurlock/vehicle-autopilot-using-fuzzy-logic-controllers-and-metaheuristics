@@ -14,9 +14,9 @@ path_is_closed = None
 road_matrix = None
 
 TOURNAMENT_SIZE = 5
-POPULATION_SIZE = 100 # Must be even
+POPULATION_SIZE = 1000 # Must be even
 ELITISM_RATIO = 0.05
-MAX_ITERATIONS = 10
+MAX_ITERATIONS = 20
 MUTATION_SPAN = 2
 MUTATION_RATE = 0.1
 MUTATION_GENOM_RATE = 0.1
@@ -202,6 +202,7 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS, elitism_rat
             new_population.append(c1)
             new_population.append(c2)
         population = np.array(new_population)
+        print('\tFitness: {}'.format(get_best_chromosome(population).fitness))
 
     result = get_best_chromosome(population)
     print('Finished optimization!')
@@ -213,5 +214,5 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS, elitism_rat
     run_game(result)
 
 if __name__ == '__main__':
-    path, path_is_closed, road_matrix = load_initial_params(constants.USE_CONVEX_POLYGON)
+    path, path_is_closed, road_matrix = load_initial_params(constants.USE_SIN_POLYGON)
     optimize()
