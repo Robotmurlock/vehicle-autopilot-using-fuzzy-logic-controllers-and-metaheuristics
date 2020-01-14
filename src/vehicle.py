@@ -8,7 +8,7 @@ def distance(x1, y1, x2, y2):
     return math.sqrt((x1-x2)**2 + (y1-y2)**2)
 
 def valid_position(x, y):
-    return x > 0 and y > 0 and x < constants.SCREEN_WIDTH and y < constants.SCREEN_HEIGHT
+    return x > 0 and y > 0 and x < constants.LEFT_SCREEN_WIDTH and y < constants.SCREEN_HEIGHT
 
 class Car:
     def __init__(self, x, y, angle=0.0, length=4):

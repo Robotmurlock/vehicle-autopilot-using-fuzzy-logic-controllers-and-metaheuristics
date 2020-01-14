@@ -24,6 +24,9 @@ class Simulation:
         pygame.display.set_caption("Trained car")
         self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), DOUBLEBUF)
         self.screen.set_alpha(False)
+        self.canvas = pygame.Surface((constants.LEFT_SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        self.right_screen = pygame.Surface((constants.RIGHT_SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        self.font = pygame.font.SysFont('Times New Roman', constants.FONT_SIZE)
         self.clock = pygame.time.Clock()
         self.ticks = 60
         self.exit = False
@@ -36,7 +39,7 @@ class Simulation:
         car = vehicle.Car(constants.CAR_POS_X, constants.CAR_POS_Y, constants.CAR_ANGLE)
 
         iteration = 0
-        dec = decoder.Decoder(FSAngle, FSVelocity, self.car, True)
+        dec = decoder.Decoder(FSAngle, FSVelocity, self.car, False)
 
         while not self.exit:
             dt = self.clock.get_time() / 1000
@@ -46,9 +49,10 @@ class Simulation:
                     self.exit = True
 
             ds, drot = dec.get_movement_params()
+            fuzzy_text = dec.fuzzy_text
             self.car.update(dt, ds, drot)
 
-            current_pixel_color = self.draw_screen()
+            current_pixel_color = self.draw_screen(fuzzy_text)
             iteration = iteration + 1
             if self.car.is_idle(iteration) or self.car.is_collided(current_pixel_color):
                 break
@@ -58,7 +62,7 @@ class Simulation:
         pygame.quit()
         return vehicle.distance(self.car.center_position().x, self.car.center_position().y, constants.GOAL.x, constants.GOAL.y)
 
-    def draw_screen(self):
+    def draw_screen(self, fuzzy_text):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         image_path = os.path.join(current_dir, constants.IMAGE_DIR, constants.IMAGE_NAME)
         car_image = pygame.image.load(image_path)
@@ -66,27 +70,38 @@ class Simulation:
 
         rotated_car = pygame.transform.rotate(scaled, self.car.angle)
 
-        self.screen.fill(constants.SCREEN_COLOR)
-        self.draw_path()
+        self.canvas.fill(constants.SCREEN_COLOR)
+        self.draw_path(self.canvas)
 
-        current_pixel_value = self.screen.get_at((int(self.car.center_position().x), int(self.car.center_position().y)))
-        self.car.left_sensor_input, self.car.front_sensor_input, self.car.right_sensor_input = self.car.get_sensors(self.screen)
-        self.screen.blit(rotated_car, self.car.position)
+        current_pixel_value = self.canvas.get_at((int(self.car.center_position().x), int(self.car.center_position().y)))
+        self.car.left_sensor_input, self.car.front_sensor_input, self.car.right_sensor_input = self.car.get_sensors(self.canvas)
+        self.canvas.blit(rotated_car, self.car.position)
+
+        self.screen.blit(self.canvas, (0, 0))
+        self.right_screen.fill(constants.RIGHT_SCREEN_COLOR)
+        self.screen.blit(self.right_screen, (constants.LEFT_SCREEN_WIDTH, 0))
+
+        lines = fuzzy_text.split('\n')
+        x = 0
+        for line in lines:
+            text = self.font.render(line, False, (0, 0, 0))
+            self.screen.blit(text, (constants.LEFT_SCREEN_WIDTH, constants.FONT_SIZE*x))
+            x += 1
         
         pygame.display.flip()
         
         return current_pixel_value
 
-    def draw_path(self):
+    def draw_path(self, screen):
         if not self.closed_polygon:
-            pygame.draw.polygon(self.screen, constants.PATH_COLOR, self.path)
+            pygame.draw.polygon(screen, constants.PATH_COLOR, self.path)
         else:
-            for i, polygon in enumerate(self.path):
+            for i, polygon in enumerate(path):
                 if i % 2 == 0:
                     draw_color = constants.PATH_COLOR
                 else:
                     draw_color = constants.SCREEN_COLOR
-                pygame.draw.polygon(self.screen, draw_color, polygon)
+                pygame.draw.polygon(screen, draw_color, polygon)
 
 def simulate(path, is_closed, FSAngle, FSVelocity):
     os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % constants.SCREEN_POSITION
@@ -97,12 +112,14 @@ if __name__ == '__main__':
     """
     Set up game with pretrained fuzzy system
     """
-    # path, is_closed = path_generator.generate_convex_polygon()
-    path, is_closed = path_generator.generate_sin_path()
+    path, is_closed = path_generator.generate_convex_polygon()
+    # path, is_closed = path_generator.generate_sin_path()
 
 
     with open(constants.PRETRAINED_FUZZY_PATH, 'rb') as f:
         fz = pickle.load(f)
+
+    pygame.font.init() 
     
     FSAngle, FSVelocity = fz
     print(FSAngle)

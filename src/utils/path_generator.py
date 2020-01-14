@@ -12,7 +12,7 @@ def generate_convex_polygon():
     num_of_points = 20
     
     for i in range (num_of_points):
-        x = random.randrange(constants.SCREEN_WIDTH)
+        x = random.randrange(constants.LEFT_SCREEN_WIDTH)
         y = random.randrange(constants.SCREEN_HEIGHT)
         coords.append((x, y))
 
@@ -36,7 +36,7 @@ def generate_sin_path():
     offset = 200
     num_of_points = 20
 
-    for i in range(constants.SCREEN_WIDTH):
+    for i in range(constants.LEFT_SCREEN_WIDTH):
         coords1.append((i, math.sin(0.01*i) * 200 + 250))
 
     coords2 = lt.apply_translation(0, offset, coords1)
