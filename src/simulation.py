@@ -97,8 +97,8 @@ if __name__ == '__main__':
     """
     Set up game with pretrained fuzzy system
     """
-    path, is_closed = path_generator.generate_convex_polygon()
-    # path, is_closed = path_generator.generate_sin_path()
+    # path, is_closed = path_generator.generate_convex_polygon()
+    path, is_closed = path_generator.generate_sin_path()
 
 
     with open(constants.PRETRAINED_FUZZY_PATH, 'rb') as f:
