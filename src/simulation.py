@@ -24,7 +24,7 @@ class Simulation:
         pygame.display.set_caption("Trained car")
         self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), DOUBLEBUF)
         self.screen.set_alpha(False)
-        self.canvas = pygame.Surface((constants.LEFT_SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        self.left_screen = pygame.Surface((constants.LEFT_SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.right_screen = pygame.Surface((constants.RIGHT_SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.font = pygame.font.SysFont('Times New Roman', constants.FONT_SIZE)
         self.clock = pygame.time.Clock()
@@ -70,14 +70,14 @@ class Simulation:
 
         rotated_car = pygame.transform.rotate(scaled, self.car.angle)
 
-        self.canvas.fill(constants.SCREEN_COLOR)
-        self.draw_path(self.canvas)
+        self.left_screen.fill(constants.SCREEN_COLOR)
+        self.draw_path(self.left_screen)
 
-        current_pixel_value = self.canvas.get_at((int(self.car.center_position().x), int(self.car.center_position().y)))
-        self.car.left_sensor_input, self.car.front_sensor_input, self.car.right_sensor_input = self.car.get_sensors(self.canvas)
-        self.canvas.blit(rotated_car, self.car.position)
+        current_pixel_value = self.left_screen.get_at((int(self.car.center_position().x), int(self.car.center_position().y)))
+        self.car.left_sensor_input, self.car.front_sensor_input, self.car.right_sensor_input = self.car.get_sensors(self.left_screen)
+        self.left_screen.blit(rotated_car, self.car.position)
 
-        self.screen.blit(self.canvas, (0, 0))
+        self.screen.blit(self.left_screen, (0, 0))
         self.right_screen.fill(constants.RIGHT_SCREEN_COLOR)
         self.screen.blit(self.right_screen, (constants.LEFT_SCREEN_WIDTH, 0))
 
