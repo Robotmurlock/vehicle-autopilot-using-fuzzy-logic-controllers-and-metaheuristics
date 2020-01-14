@@ -8,6 +8,7 @@ from utils import load_path as lp
 from utils import constants, path_generator
 import os
 import pickle # Rick
+import argparse
 
 path = None
 path_is_closed = None
@@ -49,6 +50,7 @@ class Chromosome:
         with open(filename, 'w') as f:
             f.write(str(self.FSAngle))
             f.write(str(self.FSVelocity))
+            f.write("Fitness: " + str(self.fitness))
 
         with open(constants.PRETRAINED_FUZZY_PATH, 'wb') as f:
             pickle.dump([self.FSAngle, self.FSVelocity], f)
@@ -212,5 +214,17 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS, elitism_rat
     run_game(result)
 
 if __name__ == '__main__':
-    path, path_is_closed, road_matrix = load_initial_params(constants.USE_CONVEX_POLYGON)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--polygon', choices=['convex', 'sin'], help='Runs the GA on a choosen polygon', required=True)
+
+    args = parser.parse_args()
+    polygon = args.polygon
+
+    if polygon == "convex":
+        target_polygon = constants.USE_CONVEX_POLYGON
+    else:
+        target_polygon = constants.USE_SIN_POLYGON
+
+    path, path_is_closed, road_matrix = load_initial_params(target_polygon)
     optimize()
