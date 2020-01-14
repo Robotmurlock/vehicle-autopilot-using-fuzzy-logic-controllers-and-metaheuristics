@@ -26,6 +26,7 @@ def swap(a, b):
     tmp = a
     a = b
     b = tmp
+    return a, b
 
 memory = {}
 
@@ -131,11 +132,11 @@ def mutate(c, mutation_rate = MUTATION_RATE):
 
                     if number_of_points == 2 and mf_input.points[0][1] == 1:
                         new_value = mf_input.points[0][0] + shift_value
-                        mf_input.points[0][0] = max(right_boundary, new_value)
+                        mf_input.points[0][0] = min(right_boundary, new_value)
 
                     elif number_of_points == 2 and mf_input.points[0][1] == 0:
                         new_value = mf_input.points[1][0] + shift_value
-                        mf_input.points[1][0] = min(left_boundary, new_value)
+                        mf_input.points[1][0] = max(left_boundary, new_value)
 
                     else:
                         left = mf_input.points[0][0] + shift_value
@@ -156,7 +157,7 @@ def mutate(c, mutation_rate = MUTATION_RATE):
                         mid_1, mid_2 = random.sample(range(left, right), 2)
                         
                         if mid_1 > mid_2:
-                            swap(mid_1, mid_2)
+                            mid_1, mid2 = swap(mid_1, mid_2)
 
                         new_xs = [left, mid_1, mid_2, right]
 

@@ -22,7 +22,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import fuzzy_generator
+from utils import constants
+import pickle
 
 from enum import Enum, unique
 @unique
@@ -75,6 +76,9 @@ class MFInput:
     def show_diagram(self):
         xs = [p[0] for p in self.points]
         ys = [p[1] for p in self.points]
+        print(self.name)
+        print(xs)
+        print(ys)
         
         plt.ylim(-0.1, 1.4)
         plt.xlabel('input value')
@@ -263,3 +267,17 @@ class FuzzySystem:
         for m in self.output:
             out = out + '\t' + str(m) + '\n'
         return out
+
+if __name__ == '__main__':
+    with open(constants.PRETRAINED_FUZZY_PATH, 'rb') as f:
+        fz = pickle.load(f)
+    
+    FSAngle, FSVelocity = fz
+
+    FSInput = np.array([3, 30, 15])
+    FSAngle.fit(FSInput)
+    FSVelocity.fit(FSInput)
+    print('Angle in degrees: ' + str(FSAngle.solution))
+    print('Velocity: ' + str(FSVelocity.solution))
+    FSAngle.full_info()
+    FSVelocity.full_info()
