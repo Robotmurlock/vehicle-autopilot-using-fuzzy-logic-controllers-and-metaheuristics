@@ -16,6 +16,7 @@ import decoder
 import vehicle
 from utils import constants, path_generator
 import pickle 
+import argparse
 
 
 class Simulation:
@@ -97,9 +98,17 @@ if __name__ == '__main__':
     """
     Set up game with pretrained fuzzy system
     """
-    # path, is_closed = path_generator.generate_convex_polygon()
-    path, is_closed = path_generator.generate_sin_path()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--polygon', choices=['convex', 'sin'], help='Runs the simulation with pretrained fuzzy system on a choosen polygon', required=True)
 
+    args = parser.parse_args()
+    polygon = args.polygon
+
+    if polygon == "convex":
+        path, is_closed = path_generator.generate_sin_path()
+    else:
+        path, is_closed = path_generator.generate_convex_polygon()
+    
 
     with open(constants.PRETRAINED_FUZZY_PATH, 'rb') as f:
         fz = pickle.load(f)
