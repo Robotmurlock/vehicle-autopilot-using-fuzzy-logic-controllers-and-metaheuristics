@@ -156,7 +156,6 @@ def mutate(c, mutation_rate = MUTATION_RATE):
                         if mid_1 > mid_2:
                             swap(mid_1, mid_2)
 
-                        
                         new_xs = [left, mid_1, mid_2, right]
 
                         for t in range(4):
