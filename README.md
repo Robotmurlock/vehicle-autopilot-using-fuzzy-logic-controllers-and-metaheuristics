@@ -1,4 +1,4 @@
-# Controling vehicle by using fuzzy logic with fuzzy parameters generated via genetic algorithm
+# Controling vehicle by using fuzzy logic with fuzzy parameters optimized via genetic algorithm
 
 ## Introduction
 
@@ -6,60 +6,28 @@ Purpose of this project was to try to optimize the fuzzy parameters of a fuzzy s
 
 ## Setup
 
-Path was represented as a boolean matrix with 1 for valid and 0 for invalid path.  
-Vehicle is represented as a material point in the system, but it's visualized like a sprite in the simulation.  
+You'll need the following:
 
-## Fuzzy System
+- `python3.x`
+- `pygame` library
+- `matplotlib` library
+- `numpy` library
 
-Fuzzy system contains 3 inputs and 2 outputs.
+## Running the code
 
-Inputs are: 
-- `left_sensor` - Measures distance from the left side of the road  
-- `right_sensor` - Measures distance from the right side of the road  
-- `front_sensor` - Measures distance from the front side of the road  
+If you just want to generate matrices and polygons for training you can just run:
 
-Membership functions for all input functions are: `close`, `midrange`, `far`, `very far` 
+> `python3 display_matrix_generator.py `
 
-Outputs are:
-- `velocity` - Speed change
-- `angle` - Change of the steering angle
+If you want to run the simulation on a pretrained fuzzy you can just run
+ 
+> `python3 simulation.py --polygon [convex, sin]`
 
-Membership functions for `velocity` are: `low`, `middle`, `high`, `very high`   
-Membership functions for `angle` are: `hard right`, `right`, `left`, `hard left`   
+If you want to run the genetic algorithm you can just run
+ 
+> `python3 genetic_algorithm.py --polygon [convex, sin]`
 
-### Membership functions
+## Documentation
 
-All of the membership functions are trapezoidal, except the far left and far right ones. Those are most similar to ramp functions
+You can find the documentation inside the `docs` folder
 
-Final position of critical points for each of the functions is determined by the genetic algorithm.
-
-### Rules
-???
-
-## Genetic algorithm
-
-Genetic algorithm used here works with discrete numbers.
-
-### Chromosome
-
-Single chromome contains fuzzy systems for both angle and velocity
-
-### Fitness
-
-Fitness of the unit calculated as ` 1 / distance_traveled`, goal is to minimize the fitness function
-
-### Selection
-
-Selection is tournament based.
-
-### Crossover
-
-Uniform crossover was used, where for each sensor, single trapezoidal functions were "crossovered"
-
-### Mutation ???
-
-Each of the angle membership functions had the possibility to randomly change critical points
-
-## Results
-
-## 
