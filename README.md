@@ -31,3 +31,7 @@ If you want to run the genetic algorithm you can just run:
 
 You can find the documentation inside the `docs` folder.
 
+## Result:
+
+![result](https://github.com/Robotmurlock/vehicle-autopilot-using-fuzzy-logic-controllers-and-metaheuristics/blob/master/docs/result.gif)
+
