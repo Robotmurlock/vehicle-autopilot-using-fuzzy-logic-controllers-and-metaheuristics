@@ -140,6 +140,7 @@ def mutate(c, mutation_rate = MUTATION_RATE):
 
                     else:
                         left = mf_input.points[0][0] + shift_value
+                        shift_value = random.randint(-MUTATION_SPAN, MUTATION_SPAN)
                         right = mf_input.points[-1][0] + shift_value
 
                         if left < left_boundary:
@@ -154,7 +155,9 @@ def mutate(c, mutation_rate = MUTATION_RATE):
                         if abs(left - right) <= 2:
                             right += 2 
 
-                        mid_1, mid_2 = random.sample(range(left, right), 2)
+                        mid_1 = mf_input.points[1][0] + shift_value
+                        shift_value = random.randint(-MUTATION_SPAN, MUTATION_SPAN)
+                        mid_2 = mf_input.points[2][0] + shift_value
                         
                         if mid_1 > mid_2:
                             mid_1, mid2 = swap(mid_1, mid_2)
