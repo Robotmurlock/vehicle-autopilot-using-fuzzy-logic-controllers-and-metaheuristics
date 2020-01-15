@@ -209,7 +209,9 @@ def optimize(size = POPULATION_SIZE, max_iteration = MAX_ITERATIONS, elitism_rat
     result = get_best_chromosome(population)
     print('Finished optimization!')
     print('Best solution fitness: {}'.format(result.fitness))
-    result.save('result.txt')
+
+    results_path = os.path.join(os.path.curdir, "results", "results.txt") 
+    result.save(results_path)
 
     usr = input("Press any key to start the simulation")
 

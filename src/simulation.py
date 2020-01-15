@@ -97,7 +97,7 @@ class Simulation:
         if not self.closed_polygon:
             pygame.draw.polygon(screen, constants.PATH_COLOR, self.path)
         else:
-            for i, polygon in enumerate(path):
+            for i, polygon in enumerate(self.path):
                 if i % 2 == 0:
                     draw_color = constants.PATH_COLOR
                 else:
