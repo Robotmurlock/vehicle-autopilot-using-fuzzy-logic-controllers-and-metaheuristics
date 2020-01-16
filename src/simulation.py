@@ -119,7 +119,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     polygon = args.polygon
 
-    if polygon == "convex":
+    if polygon != "convex":
         path, is_closed = path_generator.generate_sin_path()
     else:
         path, is_closed = path_generator.generate_convex_polygon()
